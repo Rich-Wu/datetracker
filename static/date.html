@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Date Form</title>
+<style>
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    input[type="text"],
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+    <h2>Date Form</h2>
+    <form action="/api/date/new" method="post">
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required>
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name">
+
+        <label for="ethnicity">Ethnicity:</label>
+        <input type="text" id="ethnicity" name="ethnicity" required>
+
+        <label for="occupation">Occupation:</label>
+        <input type="text" id="occupation" name="occupation" required>
+
+        <label for="place">Location:</label>
+        <input type="text" id="place" name="place" required>
+
+        <label for="type_of_date">Type of Date:</label>
+        <select id="type_of_date" name="type_of_date" required>
+            <option value="">Select Type</option>
+            <option value="Casual">Casual</option>
+            <option value="Formal">Formal</option>
+            <option value="Adventure">Adventure</option>
+            <option value="Romantic">Romantic</option>
+        </select>
+
+        <label for="cost">Cost:</label>
+        <input type="text" id="cost" name="cost" required>
+
+        <label for="how_ended">How Ended:</label>
+        <input type="text" id="how_ended" name="how_ended" required>
+
+        <label for="age">Age:</label>
+        <input type="text" id="age" name="age" required>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="split">Split (Yes/No):</label>
+        <select id="split" name="split" required>
+            <option value="">Select Option</option>
+            <option value="True">Yes</option>
+            <option value="False">No</option>
+        </select>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
