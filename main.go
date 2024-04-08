@@ -13,6 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func main() {
@@ -20,7 +21,7 @@ func main() {
 	var Stage string = os.Getenv("STAGE")
 	var db_uri string
 	var client *mongo.Client
-	// var users *mongo.Collection
+	var users *mongo.Collection
 	var dates *mongo.Collection
 	var router *gin.Engine
 
@@ -42,7 +43,7 @@ func main() {
 	log.Printf("Successfully connected to mongodb at %s\n", clientOptions.GetURI())
 
 	db = client.Database(APP_NAME)
-	// users = db.Collection(USERS_TABLE)
+	users = db.Collection(USERS_TABLE)
 	dates = db.Collection(DATES_TABLE)
 
 	router = gin.Default()
@@ -93,26 +94,26 @@ func main() {
 
 		api.POST("/user/new", func(c *gin.Context) {
 			c.Request.ParseForm()
-			// formData := c.Request.Form
+			formData := c.Request.Form
 
-			// password := c.PostForm("password")
+			password := c.PostForm("password")
 
-			// // Hash the password before storing it
-			// hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-			// if err != nil {
-			// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
-			// 	return
-			// }
+			// Hash the password before storing it
+			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+				return
+			}
 
-			// newUser := &User{
-			// 	FirstName: formData["first_name"][0],
-			// 	LastName:  formData["last_name"][0],
-			// }
+			newUser := &User{
+				FirstName: formData["first_name"][0],
+				LastName:  formData["last_name"][0],
+			}
 
-			// _, err := users.InsertOne(context.Background(), newUser)
-			// if err != nil {
-			// 	log.Fatalln("insertion to db failed", err)
-			// }
+			_, err := users.InsertOne(context.Background(), newUser)
+			if err != nil {
+				log.Fatalln("insertion to db failed", err)
+			}
 
 			c.Redirect(http.StatusFound, "/")
 		})
