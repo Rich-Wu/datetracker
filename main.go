@@ -48,7 +48,13 @@ func main() {
 	router = gin.Default()
 	router.Static("/static", "./static")
 	router.GET("/", func(c *gin.Context) {
+		c.File("./static/index.html")
+	})
+	router.GET("/login", func(c *gin.Context) {
 		c.File("./static/login.html")
+	})
+	router.GET("/register", func(c *gin.Context) {
+		c.File("./static/register.html")
 	})
 	router.GET("/date/new", func(c *gin.Context) {
 		c.File("./static/date.html")
@@ -83,6 +89,32 @@ func main() {
 			}
 
 			c.JSON(http.StatusOK, foundDates)
+		})
+
+		api.POST("/user/new", func(c *gin.Context) {
+			c.Request.ParseForm()
+			// formData := c.Request.Form
+
+			// password := c.PostForm("password")
+
+			// // Hash the password before storing it
+			// hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+			// if err != nil {
+			// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+			// 	return
+			// }
+
+			// newUser := &User{
+			// 	FirstName: formData["first_name"][0],
+			// 	LastName:  formData["last_name"][0],
+			// }
+
+			// _, err := users.InsertOne(context.Background(), newUser)
+			// if err != nil {
+			// 	log.Fatalln("insertion to db failed", err)
+			// }
+
+			c.Redirect(http.StatusFound, "/")
 		})
 
 		api.POST("/date/new", func(c *gin.Context) {
