@@ -7,7 +7,11 @@
 </head>
 <body>
     <h2>Register</h2>
-    <form action="/api/user/register" method="POST">
+    <form action="/api/user/new" method="POST">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+        </div>
         <div>
             <label for="first_name">First Name:</label>
             <input type="text" id="first_name" name="first_name">

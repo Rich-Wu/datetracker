@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,8 +10,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/mongo/mongodriver"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
@@ -20,13 +24,16 @@ func main() {
 	var db *mongo.Database
 	var Stage string = os.Getenv("STAGE")
 	var db_uri string
+	var secret string
 	var client *mongo.Client
-	var users *mongo.Collection
-	var dates *mongo.Collection
+	var usersCollection *mongo.Collection
+	var datesCollection *mongo.Collection
+	var sessionsCollection *mongo.Collection
 	var router *gin.Engine
 
 	if Stage == DEV {
 		db_uri = DEV_MONGO
+		secret = DEV_SECRET
 	}
 
 	clientOptions := options.Client().ApplyURI(db_uri)
@@ -43,12 +50,30 @@ func main() {
 	log.Printf("Successfully connected to mongodb at %s\n", clientOptions.GetURI())
 
 	db = client.Database(APP_NAME)
-	users = db.Collection(USERS_TABLE)
-	dates = db.Collection(DATES_TABLE)
+	usersCollection = db.Collection(USERS_TABLE)
+	datesCollection = db.Collection(DATES_TABLE)
+	sessionsCollection = db.Collection(SESSIONS_STORE)
+
+	// Sets username to be unique
+	indexModel := mongo.IndexModel{
+		Keys:    bson.M{"username": 1}, // Create a unique index on the "username" field
+		Options: options.Index().SetUnique(true),
+	}
+
+	// Create the unique index
+	_, err = usersCollection.Indexes().CreateOne(context.Background(), indexModel)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	router = gin.Default()
+	sessionsStore := mongodriver.NewStore(sessionsCollection, 3600, true, []byte(secret))
+	router.Use(sessions.Sessions("logins", sessionsStore))
 	router.Static("/static", "./static")
+
 	router.GET("/", func(c *gin.Context) {
+		session := sessions.Default(c)
+		log.Println(session.Get("user"))
 		c.File("./static/index.html")
 	})
 	router.GET("/login", func(c *gin.Context) {
@@ -63,6 +88,12 @@ func main() {
 	router.GET("/dates", func(c *gin.Context) {
 		// TODO
 	})
+	router.POST("/login", func(c *gin.Context) {
+		c.Request.ParseForm()
+		filter := bson.D{{Key: "username", Value: c.PostForm("username")}}
+		user := usersCollection.FindOne(context.Background(), filter, options.FindOne())
+		log.Println(user)
+	})
 	api := router.Group("/api")
 	{
 		api.GET("/dates", func(c *gin.Context) {
@@ -72,7 +103,7 @@ func main() {
 			// TODO: allow changing limit in query params
 			findOptions.SetLimit(20)
 
-			cursor, err := dates.Find(context.Background(), bson.D{}, findOptions)
+			cursor, err := datesCollection.Find(context.Background(), bson.D{}, findOptions)
 			if err != nil {
 				log.Println("Error finding documents:", err)
 				c.AbortWithError(http.StatusConflict, err)
@@ -94,55 +125,65 @@ func main() {
 
 		api.POST("/user/new", func(c *gin.Context) {
 			c.Request.ParseForm()
-			formData := c.Request.Form
-
+			session := sessions.Default(c)
 			password := c.PostForm("password")
 
 			// Hash the password before storing it
 			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
-				return
 			}
 
 			newUser := &User{
-				FirstName: formData["first_name"][0],
-				LastName:  formData["last_name"][0],
+				UserName:  c.PostForm("username"),
+				FirstName: c.PostForm("first_name"),
+				LastName:  c.PostForm("last_name"),
+				Password:  string(hashedPassword),
 			}
 
-			_, err := users.InsertOne(context.Background(), newUser)
+			// TODO: Do something with the user for session storage
+			user, err := usersCollection.InsertOne(context.Background(), newUser)
 			if err != nil {
-				log.Fatalln("insertion to db failed", err)
+				log.Println("insertion to db failed", err)
+				c.JSON(http.StatusUnprocessableEntity, errors.New(err.Error()))
 			}
+			session.Set("user", user.InsertedID)
+			session.Save()
+			log.Println(session.Get("user"))
 
 			c.Redirect(http.StatusFound, "/")
 		})
 
 		api.POST("/date/new", func(c *gin.Context) {
 			c.Request.ParseForm()
-			formData := c.Request.Form
+			session := sessions.Default(c)
 
-			cost, _ := strconv.ParseFloat(formData["cost"][0], 32)
-			age, _ := strconv.ParseInt(formData["age"][0], 10, 32)
-			date, _ := time.Parse(time.DateOnly, formData["date"][0])
-			split, _ := strconv.ParseBool(formData["split"][0])
+			cost, _ := strconv.ParseFloat(c.PostForm("cost"), 32)
+			age, _ := strconv.ParseInt(c.PostForm("age"), 10, 32)
+			date, _ := time.Parse(time.DateOnly, c.PostForm("date"))
+			split, _ := strconv.ParseBool(c.PostForm("split"))
+			owner := session.Get("username")
+			if owner == nil {
+				c.AbortWithStatus(http.StatusForbidden)
+			}
 
 			newDate := &Date{
-				FirstName:  formData["first_name"][0],
-				LastName:   formData["last_name"][0],
-				Ethnicity:  formData["ethnicity"][0],
-				Occupation: formData["occupation"][0],
-				Place:      formData["place"][0],
-				TypeOfDate: formData["type_of_date"][0],
+				Owner:      owner.(primitive.ObjectID),
+				FirstName:  c.PostForm("first_name"),
+				LastName:   c.PostForm("last_name"),
+				Ethnicity:  c.PostForm("ethnicity"),
+				Occupation: c.PostForm("occupation"),
+				Place:      c.PostForm("place"),
+				TypeOfDate: c.PostForm("type_of_date"),
 				Cost:       float32(cost),
-				Result:     formData["how_ended"][0],
+				Result:     c.PostForm("result"),
 				Age:        int32(age),
 				Date:       date,
 				Split:      split,
 				CreatedAt:  time.Now(),
 			}
 
-			_, err := dates.InsertOne(context.Background(), newDate)
+			_, err := datesCollection.InsertOne(context.Background(), newDate)
 			if err != nil {
 				log.Fatalln("insertion to db failed", err)
 			}
