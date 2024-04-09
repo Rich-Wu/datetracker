@@ -68,31 +68,71 @@ func main() {
 
 	router = gin.Default()
 	sessionsStore := mongodriver.NewStore(sessionsCollection, 3600, true, []byte(secret))
-	router.Use(sessions.Sessions("logins", sessionsStore))
+	router.Use(sessions.Sessions("session", sessionsStore))
 	router.Static("/static", "./static")
+	router.LoadHTMLGlob("templates/*.tmpl")
 
 	router.GET("/", func(c *gin.Context) {
 		session := sessions.Default(c)
-		log.Println(session.Get("user"))
-		c.File("./static/index.html")
+		userId := session.Get("user")
+		username := session.Get("username")
+		count := session.Get("count")
+		if count == nil {
+			count = 0
+		}
+		log.Println("userId:", userId)
+		log.Println("username:", username)
+		log.Println("count:", count)
+		c.HTML(http.StatusOK, "index.tmpl", gin.H{
+			"username": username,
+			"count":    count,
+			"session":  session,
+		})
 	})
 	router.GET("/login", func(c *gin.Context) {
-		c.File("./static/login.html")
+		c.HTML(http.StatusOK, "login.tmpl", gin.H{})
 	})
 	router.GET("/register", func(c *gin.Context) {
-		c.File("./static/register.html")
+		c.HTML(http.StatusOK, "register.tmpl", gin.H{})
 	})
 	router.GET("/date/new", func(c *gin.Context) {
-		c.File("./static/date.html")
+		session := sessions.Default(c)
+		log.Println(session.Get("username"))
+		c.HTML(http.StatusOK, "date.tmpl", gin.H{
+			"username": session.Get("username"),
+		})
 	})
 	router.GET("/dates", func(c *gin.Context) {
-		// TODO
+		session := sessions.Default(c)
+		username := session.Get("username")
+		user := session.Get("user")
+		test := "teststring"
+
+		c.HTML(http.StatusOK, "dates.tmpl", gin.H{
+			"test":     test,
+			"username": username,
+			"user":     user,
+		})
 	})
 	router.POST("/login", func(c *gin.Context) {
+		session := sessions.Default(c)
 		c.Request.ParseForm()
 		filter := bson.D{{Key: "username", Value: c.PostForm("username")}}
-		user := usersCollection.FindOne(context.Background(), filter, options.FindOne())
-		log.Println(user)
+		userResult := usersCollection.FindOne(context.Background(), filter, options.FindOne())
+
+		foundUser := &User{}
+		userResult.Decode(foundUser)
+
+		err := bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(c.PostForm("password")))
+		if err != nil {
+			c.AbortWithError(http.StatusForbidden, err)
+		}
+
+		session.Set("user", foundUser.ID.Hex())
+		session.Set("username", foundUser.UserName)
+		session.Save()
+
+		c.Redirect(303, "/")
 	})
 	api := router.Group("/api")
 	{
@@ -142,16 +182,17 @@ func main() {
 			}
 
 			// TODO: Do something with the user for session storage
-			user, err := usersCollection.InsertOne(context.Background(), newUser)
+			_, err = usersCollection.InsertOne(context.Background(), newUser)
 			if err != nil {
 				log.Println("insertion to db failed", err)
 				c.JSON(http.StatusUnprocessableEntity, errors.New(err.Error()))
 			}
-			session.Set("user", user.InsertedID)
+			session.Set("username", c.PostForm("username"))
 			session.Save()
-			log.Println(session.Get("user"))
+			log.Println(session)
+			log.Println(session.Get("username"))
 
-			c.Redirect(http.StatusFound, "/")
+			c.Redirect(http.StatusSeeOther, "/date/new")
 		})
 
 		api.POST("/date/new", func(c *gin.Context) {
@@ -162,7 +203,7 @@ func main() {
 			age, _ := strconv.ParseInt(c.PostForm("age"), 10, 32)
 			date, _ := time.Parse(time.DateOnly, c.PostForm("date"))
 			split, _ := strconv.ParseBool(c.PostForm("split"))
-			owner := session.Get("username")
+			owner := session.Get("user")
 			if owner == nil {
 				c.AbortWithStatus(http.StatusForbidden)
 			}
