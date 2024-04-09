@@ -207,9 +207,13 @@ func main() {
 			if owner == nil {
 				c.AbortWithStatus(http.StatusForbidden)
 			}
+			objId, err := primitive.ObjectIDFromHex(owner.(string))
+			if err != nil {
+				c.AbortWithStatus(http.StatusForbidden)
+			}
 
 			newDate := &Date{
-				Owner:      owner.(primitive.ObjectID),
+				Owner:      objId,
 				FirstName:  c.PostForm("first_name"),
 				LastName:   c.PostForm("last_name"),
 				Ethnicity:  c.PostForm("ethnicity"),
@@ -224,7 +228,7 @@ func main() {
 				CreatedAt:  time.Now(),
 			}
 
-			_, err := datesCollection.InsertOne(context.Background(), newDate)
+			_, err = datesCollection.InsertOne(context.Background(), newDate)
 			if err != nil {
 				log.Fatalln("insertion to db failed", err)
 			}
