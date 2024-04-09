@@ -74,19 +74,9 @@ func main() {
 
 	router.GET("/", func(c *gin.Context) {
 		session := sessions.Default(c)
-		userId := session.Get("user")
 		username := session.Get("username")
-		count := session.Get("count")
-		if count == nil {
-			count = 0
-		}
-		log.Println("userId:", userId)
-		log.Println("username:", username)
-		log.Println("count:", count)
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{
 			"username": username,
-			"count":    count,
-			"session":  session,
 		})
 	})
 	router.GET("/login", func(c *gin.Context) {
@@ -97,21 +87,40 @@ func main() {
 	})
 	router.GET("/date/new", func(c *gin.Context) {
 		session := sessions.Default(c)
-		log.Println(session.Get("username"))
 		c.HTML(http.StatusOK, "date.tmpl", gin.H{
 			"username": session.Get("username"),
 		})
 	})
-	router.GET("/dates", func(c *gin.Context) {
+	router.GET("/dates/", func(c *gin.Context) {
 		session := sessions.Default(c)
 		username := session.Get("username")
 		user := session.Get("user")
-		test := "teststring"
+		findOptions := options.Find()
+		// Sort by date of occurrence, descending, then by time of entry for tiebreaking
+		findOptions.SetSort(bson.D{{Key: "date", Value: -1}, {Key: "createdAt", Value: -1}})
+		// TODO: allow changing limit in query params
+		findOptions.SetLimit(50)
 
+		cursor, err := datesCollection.Find(context.Background(), bson.D{}, findOptions)
+		if err != nil {
+			log.Println("Error finding focuments:", err)
+			c.AbortWithError(http.StatusConflict, err)
+		}
+		defer cursor.Close(context.Background())
+
+		dates := []Date{}
+		for cursor.Next(context.Background()) {
+			var result Date
+			if err := cursor.Decode(&result); err != nil {
+				fmt.Println("Error decoding document:", err)
+				c.AbortWithError(http.StatusInternalServerError, err)
+			}
+			dates = append(dates, result)
+		}
 		c.HTML(http.StatusOK, "dates.tmpl", gin.H{
-			"test":     test,
 			"username": username,
 			"user":     user,
+			"dates":    dates,
 		})
 	})
 	router.POST("/login", func(c *gin.Context) {
@@ -141,7 +150,7 @@ func main() {
 			// Sort by the date of occurrence, descending and then recency of insertion for tiebreaking
 			findOptions.SetSort(bson.D{{Key: "date", Value: -1}, {Key: "createdAt", Value: -1}})
 			// TODO: allow changing limit in query params
-			findOptions.SetLimit(20)
+			findOptions.SetLimit(50)
 
 			cursor, err := datesCollection.Find(context.Background(), bson.D{}, findOptions)
 			if err != nil {
@@ -191,7 +200,7 @@ func main() {
 			session.Set("user", result.InsertedID.(primitive.ObjectID).Hex())
 			session.Save()
 
-			c.Redirect(http.StatusSeeOther, "/date/new")
+			c.Redirect(http.StatusSeeOther, "/dates")
 		})
 
 		api.POST("/date/new", func(c *gin.Context) {

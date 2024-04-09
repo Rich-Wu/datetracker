@@ -6,7 +6,9 @@
     <title>Hello World</title>
 </head>
 <body>
-    <h1>User: {{ .username }} {{ .test }} {{ .count }}</h1>
-    <p>This is a basic example of a Go template file.</p>
+    <h1>User: {{ .username }}</h1>
+    {{ range .dates }}
+        <div>{{ .FirstName }} {{ .LastName }} {{ .Cost }}</div>
+    {{ end }}
 </body>
 </html>
