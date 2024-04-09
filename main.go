@@ -181,16 +181,15 @@ func main() {
 				Password:  string(hashedPassword),
 			}
 
-			// TODO: Do something with the user for session storage
-			_, err = usersCollection.InsertOne(context.Background(), newUser)
+			result, err := usersCollection.InsertOne(context.Background(), newUser)
 			if err != nil {
 				log.Println("insertion to db failed", err)
 				c.JSON(http.StatusUnprocessableEntity, errors.New(err.Error()))
 			}
+
 			session.Set("username", c.PostForm("username"))
+			session.Set("user", result.InsertedID.(primitive.ObjectID).Hex())
 			session.Save()
-			log.Println(session)
-			log.Println(session.Get("username"))
 
 			c.Redirect(http.StatusSeeOther, "/date/new")
 		})
