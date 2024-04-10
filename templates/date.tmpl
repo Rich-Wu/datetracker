@@ -4,81 +4,91 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Date Form</title>
-<style>
-    label {
-        display: block;
-        margin-bottom: 5px;
-    }
-    input[type="text"],
-    select {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-    input[type="submit"] {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    input[type="submit"]:hover {
-        background-color: #45a049;
-    }
-</style>
+<!-- Include Tailwind CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>Date Form {{ .username }}</h2>
-    <form action="/api/date/new" method="post">
-        <label for="first_name">First Name:</label>
-        <input type="text" id="first_name" name="first_name" required>
+<body class="p-4">
+    <h2 class="text-2xl font-bold mb-4">Date Form</h2>
+    <form action="/api/date/new" method="post" class="max-w-md mx-auto">
+        <div class="mb-4">
+            <label for="first_name" class="block mb-1">First Name:</label>
+            <input type="text" id="first_name" name="first_name" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        </div>
 
-        <label for="last_name">Last Name:</label>
-        <input type="text" id="last_name" name="last_name">
+        <div class="mb-4">
+            <label for="last_name" class="block mb-1">Last Name:</label>
+            <input type="text" id="last_name" name="last_name"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        </div>
 
-        <label for="ethnicity">Ethnicity:</label>
-        <input type="text" id="ethnicity" name="ethnicity" required>
+        <div class="mb-4">
+            <label for="ethnicity" class="block mb-1">Ethnicity:</label>
+            <input type="text" id="ethnicity" name="ethnicity" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        </div>
 
-        <label for="occupation">Occupation:</label>
-        <input type="text" id="occupation" name="occupation" required>
+        <div class="mb-4">
+            <label for="occupation" class="block mb-1">Occupation:</label>
+            <input type="text" id="occupation" name="occupation" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        </div>
 
-        <label for="place">Location:</label>
-        <input type="text" id="place" name="place" required>
+        <div class="mb-4">
+            <label for="place" class="block mb-1">Location:</label>
+            <input type="text" id="place" name="place" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        </div>
 
-        <label for="type_of_date">Type of Date:</label>
-        <select id="type_of_date" name="type_of_date" required>
-            <option value="">Select Type</option>
-            <option value="Meal">Meal</option>
-            <option value="Drink">Drink</option>
-            <option value="Casual">Casual</option>
-            <option value="Formal">Formal</option>
-            <option value="Adventure">Adventure</option>
-        </select>
+        <div class="mb-4">
+            <label for="type_of_date" class="block mb-1">Type of Date:</label>
+            <select id="type_of_date" name="type_of_date" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                <option value="">Select Type</option>
+                <option value="Meal">Meal</option>
+                <option value="Drink">Drink</option>
+                <option value="Casual">Casual</option>
+                <option value="Formal">Formal</option>
+                <option value="Adventure">Adventure</option>
+            </select>
+        </div>
 
-        <label for="cost">Cost:</label>
-        <input type="text" id="cost" name="cost" required>
+        <div class="mb-4">
+            <label for="cost" class="block mb-1">Cost:</label>
+            <input type="text" id="cost" name="cost" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        </div>
 
-        <label for="how_ended">How Ended:</label>
-        <input type="text" id="how_ended" name="how_ended" required>
+        <div class="mb-4">
+            <label for="how_ended" class="block mb-1">How Ended:</label>
+            <input type="text" id="how_ended" name="how_ended" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        </div>
 
-        <label for="age">Age:</label>
-        <input type="text" id="age" name="age" required>
+        <div class="mb-4">
+            <label for="age" class="block mb-1">Age:</label>
+            <input type="text" id="age" name="age" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        </div>
 
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" required>
+        <div class="mb-4">
+            <label for="date" class="block mb-1">Date:</label>
+            <input type="date" id="date" name="date" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        </div>
 
-        <label for="split">Split (Yes/No):</label>
-        <select id="split" name="split" required>
-            <option value="">Select Option</option>
-            <option value="True">Yes</option>
-            <option value="False">No</option>
-        </select>
+        <div class="mb-4">
+            <label for="split" class="block mb-1">Split (Yes/No):</label>
+            <select id="split" name="split" required
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                <option value="">Select Option</option>
+                <option value="True">Yes</option>
+                <option value="False">No</option>
+            </select>
+        </div>
 
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit"
+            class="w-full bg-green-500 text-white font-bold py-2 px-4 rounded cursor-pointer hover:bg-green-600">
     </form>
 </body>
 </html>

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"text/template"
 	"time"
 
 	"github.com/gin-contrib/sessions"
@@ -69,6 +70,11 @@ func main() {
 	router = gin.Default()
 	sessionsStore := mongodriver.NewStore(sessionsCollection, 3600, true, []byte(secret))
 	router.Use(sessions.Sessions("session", sessionsStore))
+	router.SetFuncMap(template.FuncMap{
+		"formatCost":  formatCost,
+		"formatDate":  formatDate,
+		"formatSplit": formatSplit,
+	})
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/*.tmpl")
 
