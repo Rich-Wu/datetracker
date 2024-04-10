@@ -8,38 +8,38 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="p-4">
-  <h1 class="text-2xl font-bold mb-4 center">Table View</h1>
+  <h1 class="text-2xl font-bold mb-4 center">{{ if .username }}{{ .username }}'s {{ else }}My {{end}}Dates</h1>
   <div class="overflow-x-auto">
     <table class="w-full table-auto border-collapse border border-gray-300">
       <thead>
         <tr class="bg-gray-100">
+          <th class="px-4 py-2">Date</th>
           <th class="px-4 py-2">First Name</th>
           <th class="px-4 py-2">Last Name</th>
+          <th class="px-4 py-2">Age</th>
           <th class="px-4 py-2">Ethnicity</th>
           <th class="px-4 py-2">Occupation</th>
           <th class="px-4 py-2">Place</th>
           <th class="px-4 py-2">Type of Date</th>
           <th class="px-4 py-2">Cost</th>
-          <th class="px-4 py-2">How Ended</th>
-          <th class="px-4 py-2">Age</th>
-          <th class="px-4 py-2">Date</th>
           <th class="px-4 py-2">Split</th>
+          <th class="px-4 py-2">How Ended</th>
         </tr>
       </thead>
       <tbody id="table-body">
         {{ range .dates }}
         <tr>
+            <td class="border px-4 py-2">{{ .Date | formatDate }}</td>
             <td class="border px-4 py-2">{{ .FirstName }}</td>
             <td class="border px-4 py-2">{{ .LastName }}</td>
+            <td class="border px-4 py-2">{{ .Age }}</td>
             <td class="border px-4 py-2">{{ .Ethnicity }}</td>
             <td class="border px-4 py-2">{{ .Occupation }}</td>
             <td class="border px-4 py-2">{{ .Place }}</td>
             <td class="border px-4 py-2">{{ .TypeOfDate }}</td>
-            <td class="border px-4 py-2">{{ .Cost | formatCost }}</td>
-            <td class="border px-4 py-2">{{ .Result }}</td>
-            <td class="border px-4 py-2">{{ .Age }}</td>
-            <td class="border px-4 py-2">{{ .Date | formatDate }}</td>
+            <td class="border px-4 py-2 text-right">{{ .Cost | formatCost }}</td>
             <td class="border px-4 py-2">{{ .Split | formatSplit }}</td>
+            <td class="border px-4 py-2">{{ .Result }}</td>
         </tr>
         {{ end }}
       </tbody>

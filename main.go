@@ -107,7 +107,7 @@ func main() {
 		// TODO: allow changing limit in query params
 		findOptions.SetLimit(50)
 
-		cursor, err := datesCollection.Find(context.Background(), bson.D{}, findOptions)
+		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "owner", Value: user}}, findOptions)
 		if err != nil {
 			log.Println("Error finding focuments:", err)
 			c.AbortWithError(http.StatusConflict, err)
@@ -133,7 +133,7 @@ func main() {
 		username := c.Param("username")
 		userResult := usersCollection.FindOne(context.Background(), bson.D{{Key: "username", Value: username}}, options.FindOne())
 		if userResult.Err() != nil {
-			c.AbortWithStatus(http.StatusNotFound)
+			c.Redirect(http.StatusSeeOther, "/dates")
 		}
 
 		foundUser := &User{}
