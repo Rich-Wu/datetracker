@@ -107,7 +107,12 @@ func main() {
 		// TODO: allow changing limit in query params
 		findOptions.SetLimit(50)
 
-		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "owner", Value: user}}, findOptions)
+		userId, err := primitive.ObjectIDFromHex(user.(string))
+		if err != nil {
+			c.AbortWithError(http.StatusInternalServerError, errors.New("could not parse user"))
+		}
+
+		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "owner", Value: userId}}, findOptions)
 		if err != nil {
 			log.Println("Error finding focuments:", err)
 			c.AbortWithError(http.StatusConflict, err)
