@@ -97,7 +97,7 @@ func main() {
 			"username": session.Get("username"),
 		})
 	})
-	router.GET("/dates/", func(c *gin.Context) {
+	router.GET("/dates", func(c *gin.Context) {
 		session := sessions.Default(c)
 		username := session.Get("username")
 		user := session.Get("user")
@@ -126,6 +126,43 @@ func main() {
 		c.HTML(http.StatusOK, "dates.tmpl", gin.H{
 			"username": username,
 			"user":     user,
+			"dates":    dates,
+		})
+	})
+	router.GET("/dates/:username", func(c *gin.Context) {
+		username := c.Param("username")
+		userResult := usersCollection.FindOne(context.Background(), bson.D{{Key: "username", Value: username}}, options.FindOne())
+		if userResult.Err() != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+		}
+
+		foundUser := &User{}
+		userResult.Decode(foundUser)
+
+		findOptions := options.Find()
+		// Sort by date of occurrence, descending, then by time of entry for tiebreaking
+		findOptions.SetSort(bson.D{{Key: "date", Value: -1}, {Key: "createdAt", Value: -1}})
+		// TODO: allow changing limit in query params
+		findOptions.SetLimit(50)
+
+		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "owner", Value: foundUser.ID}}, findOptions)
+		if err != nil {
+			log.Println("Error finding focuments:", err)
+			c.AbortWithError(http.StatusConflict, err)
+		}
+		defer cursor.Close(context.Background())
+
+		dates := []Date{}
+		for cursor.Next(context.Background()) {
+			var result Date
+			if err := cursor.Decode(&result); err != nil {
+				fmt.Println("Error decoding document:", err)
+				c.AbortWithError(http.StatusInternalServerError, err)
+			}
+			dates = append(dates, result)
+		}
+		c.HTML(200, "dates.tmpl", gin.H{
+			"username": username,
 			"dates":    dates,
 		})
 	})
