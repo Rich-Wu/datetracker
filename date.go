@@ -8,7 +8,7 @@ import (
 
 type Date struct {
 	ID         primitive.ObjectID `bson:"_id,omitempty"`
-	Owner      primitive.ObjectID `json:"ownerId" bson:"ownerId"`
+	OwnerId    primitive.ObjectID `json:"ownerId" bson:"ownerId"`
 	FirstName  string             `json:"firstName" bson:"firstName" form:"first_name" binding:"required"`
 	LastName   string             `json:"lastName,omitempty" bson:"lastName,omitempty" form:"last_name"`
 	Ethnicity  string             `json:"ethnicity,omitempty" bson:"ethnicity,omitempty" form:"ethnicity" binding:"required"`

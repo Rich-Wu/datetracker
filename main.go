@@ -24,6 +24,7 @@ import (
 func main() {
 	var db *mongo.Database
 	var Stage string = os.Getenv("STAGE")
+	var port int32
 	var db_uri string
 	var secret string
 	var client *mongo.Client
@@ -35,9 +36,16 @@ func main() {
 	if Stage == DEV {
 		db_uri = DEV_MONGO
 		secret = DEV_SECRET
+		port = DEV_PORT
+	} else {
+		db_uri = os.Getenv("DB_URI")
+		secret = os.Getenv("SECRET")
+		portNum, _ := strconv.ParseInt(os.Getenv("PORT"), 10, 16)
+		port = int32(portNum)
 	}
 
-	clientOptions := options.Client().ApplyURI(db_uri)
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	clientOptions := options.Client().ApplyURI(db_uri).SetServerAPIOptions(serverAPI)
 
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
@@ -79,11 +87,14 @@ func main() {
 	router.LoadHTMLGlob("templates/*.tmpl")
 
 	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	})
+	router.GET("/logout", func(c *gin.Context) {
 		session := sessions.Default(c)
-		username := session.Get("username")
-		c.HTML(http.StatusOK, "index.tmpl", gin.H{
-			"username": username,
-		})
+		session.Clear()
+		session.Save()
+
+		c.Redirect(http.StatusFound, "/")
 	})
 	router.GET("/login", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{})
@@ -101,6 +112,10 @@ func main() {
 		session := sessions.Default(c)
 		username := session.Get("username")
 		user := session.Get("user")
+		if user == nil || username == nil {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
 		findOptions := options.Find()
 		// Sort by date of occurrence, descending, then by time of entry for tiebreaking
 		findOptions.SetSort(bson.D{{Key: "date", Value: -1}, {Key: "createdAt", Value: -1}})
@@ -112,7 +127,7 @@ func main() {
 			c.AbortWithError(http.StatusInternalServerError, errors.New("could not parse user"))
 		}
 
-		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "owner", Value: userId}}, findOptions)
+		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "ownerId", Value: userId}}, findOptions)
 		if err != nil {
 			log.Println("Error finding focuments:", err)
 			c.AbortWithError(http.StatusConflict, err)
@@ -150,7 +165,7 @@ func main() {
 		// TODO: allow changing limit in query params
 		findOptions.SetLimit(50)
 
-		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "owner", Value: foundUser.ID}}, findOptions)
+		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "ownerId", Value: foundUser.ID}}, findOptions)
 		if err != nil {
 			log.Println("Error finding focuments:", err)
 			c.AbortWithError(http.StatusConflict, err)
@@ -189,7 +204,7 @@ func main() {
 		session.Set("username", foundUser.UserName)
 		session.Save()
 
-		c.Redirect(303, "/")
+		c.Redirect(http.StatusFound, "/dates")
 	})
 	api := router.Group("/api")
 	{
@@ -252,6 +267,8 @@ func main() {
 		})
 
 		api.POST("/date/new", func(c *gin.Context) {
+			var firstName string
+			var lastName string
 			c.Request.ParseForm()
 			session := sessions.Default(c)
 
@@ -267,13 +284,19 @@ func main() {
 			if err != nil {
 				c.AbortWithStatus(http.StatusForbidden)
 			}
+			if isValidName(c.PostForm("first_name")) && isValidName(c.PostForm("last_name")) {
+				firstName = capitalizeAndTrim(c.PostForm("first_name"))
+				lastName = capitalizeAndTrim(c.PostForm("last_name"))
+			} else {
+				c.Redirect(http.StatusBadRequest, "/dates")
+			}
 
 			newDate := &Date{
-				Owner:      objId,
-				FirstName:  c.PostForm("first_name"),
-				LastName:   c.PostForm("last_name"),
-				Ethnicity:  c.PostForm("ethnicity"),
-				Occupation: c.PostForm("occupation"),
+				OwnerId:    objId,
+				FirstName:  firstName,
+				LastName:   lastName,
+				Ethnicity:  capitalizeAndTrim(c.PostForm("ethnicity")),
+				Occupation: capitalizeAndTrim(c.PostForm("occupation")),
 				Place:      c.PostForm("place"),
 				TypeOfDate: c.PostForm("type_of_date"),
 				Cost:       float32(cost),
@@ -293,5 +316,5 @@ func main() {
 		})
 	}
 
-	router.Run(":8080")
+	router.Run(":" + fmt.Sprint(port))
 }
