@@ -23,4 +23,3 @@ jobs:
         env_vars: |-
           SECRET=${{ secrets.SECRET }}
           DB_URI=${{ secrets.DB_URI }}
-    - id: 'test'
