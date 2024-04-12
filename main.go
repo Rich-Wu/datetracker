@@ -80,6 +80,12 @@ func main() {
 	router = gin.Default()
 	sessionsStore := mongodriver.NewStore(sessionsCollection, 3600, true, []byte(secret))
 	router.Use(sessions.Sessions("session", sessionsStore))
+	router.Use(func(c *gin.Context) {
+		if c.Writer.Status() == http.StatusNotFound {
+			c.HTML(http.StatusNotFound, "notfound.tmpl", nil)
+		}
+		c.Next()
+	})
 	router.SetFuncMap(template.FuncMap{
 		"formatCost":  formatCost,
 		"formatDate":  formatDate,

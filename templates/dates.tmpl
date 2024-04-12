@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <!-- Include Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body class="p-4">
   <h1 class="text-2xl font-bold mb-4 center">{{ if .username }}{{ .username }}'s {{ else }}My {{end}}Dates</h1>
   <div class="overflow-x-auto">
@@ -29,17 +31,17 @@
       <tbody id="table-body">
         {{ range .dates }}
         <tr>
-            <td class="border px-4 py-2">{{ .Date | formatDate }}</td>
-            <td class="border px-4 py-2">{{ .FirstName }}</td>
-            <td class="border px-4 py-2">{{ .LastName }}</td>
-            <td class="border px-4 py-2">{{ .Age }}</td>
-            <td class="border px-4 py-2">{{ .Ethnicity }}</td>
-            <td class="border px-4 py-2">{{ .Occupation }}</td>
-            <td class="border px-4 py-2">{{ .Place }}</td>
-            <td class="border px-4 py-2">{{ .TypeOfDate }}</td>
-            <td class="border px-4 py-2 text-right">{{ .Cost | formatCost }}</td>
-            <td class="border px-4 py-2">{{ .Split | formatSplit }}</td>
-            <td class="border px-4 py-2">{{ .Result }}</td>
+          <td class="border px-4 py-2">{{ .Date | formatDate }}</td>
+          <td class="border px-4 py-2">{{ .FirstName }}</td>
+          <td class="border px-4 py-2">{{ .LastName }}</td>
+          <td class="border px-4 py-2">{{ .Age }}</td>
+          <td class="border px-4 py-2">{{ .Ethnicity }}</td>
+          <td class="border px-4 py-2">{{ .Occupation }}</td>
+          <td class="border px-4 py-2">{{ .Place }}</td>
+          <td class="border px-4 py-2">{{ .TypeOfDate }}</td>
+          <td class="border px-4 py-2 text-right">{{ .Cost | formatCost }}</td>
+          <td class="border px-4 py-2">{{ .Split | formatSplit }}</td>
+          <td class="border px-4 py-2">{{ .Result }}</td>
         </tr>
         {{ end }}
       </tbody>
@@ -47,4 +49,5 @@
   </div>
 
 </body>
+
 </html>
