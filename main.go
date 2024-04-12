@@ -37,11 +37,13 @@ func main() {
 		db_uri = DEV_MONGO
 		secret = DEV_SECRET
 		port = DEV_PORT
-	} else {
+	} else if Stage == PROD {
 		db_uri = os.Getenv("DB_URI")
 		secret = os.Getenv("SECRET")
 		portNum, _ := strconv.ParseInt(os.Getenv("PORT"), 10, 16)
 		port = int32(portNum)
+	} else {
+		log.Fatalln("stage was not set correctly. Check configurations and environments.")
 	}
 
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)

@@ -1,0 +1,4 @@
+runtime: go121
+service: default
+env_variables:
+  STAGE: "PROD"
