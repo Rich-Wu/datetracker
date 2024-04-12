@@ -25,6 +25,6 @@ jobs:
           SECRET=${{ secrets.SECRET }}
           DB_URI=${{ secrets.DB_URI }}
     - id: 'feedback'
-      name: 'Gives output url on success'
+      name: 'Deployed: ${{ steps.deploy.outputs.version_url }}'
       run: 'echo "Visit deployed app at: ${{ steps.deploy.outputs.version_url }}"'
 
