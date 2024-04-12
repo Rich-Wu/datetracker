@@ -7,6 +7,7 @@
     <title>Date Form</title>
     <!-- Include Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script type="text/javascript" src="/static/scripts.js"></script>
 </head>
 
 <body class="p-4">
@@ -35,30 +36,41 @@
             <input type="text" id="occupation" name="occupation" required
                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
         </div>
-
-        <div class="mb-4">
-            <label for="place" class="block mb-1">Location:</label>
-            <input type="text" id="place" name="place" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
-        </div>
-
-        <div class="mb-4">
-            <label for="type_of_date" class="block mb-1">Type of Date:</label>
-            <select id="type_of_date" name="type_of_date" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
-                <option value="">Select Type</option>
-                <option value="Meal">Meal</option>
-                <option value="Drink">Drink</option>
-                <option value="Casual">Casual</option>
-                <option value="Formal">Formal</option>
-                <option value="Adventure">Adventure</option>
-            </select>
-        </div>
-
-        <div class="mb-4">
-            <label for="cost" class="block mb-1">Cost:</label>
-            <input type="text" id="cost" name="cost" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+        <button onclick="addPlace(event)">Add another venue</button>
+        <div id="places">
+            <fieldset>
+                <div class="mb-4">
+                    <label for="place" class="block mb-1">Location:</label>
+                    <input type="text" id="place" name="place" required
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="type_of_place" class="block mb-1">Type of Date:</label>
+                    <select id="type_of_place" name="type_of_place" required
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                        <option value="">Select Type</option>
+                        <option value="Meal">Meal</option>
+                        <option value="Drink">Drink</option>
+                        <option value="Casual">Casual</option>
+                        <option value="Formal">Formal</option>
+                        <option value="Adventure">Adventure</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="cost" class="block mb-1">Cost:</label>
+                    <input type="text" id="cost" name="cost" required
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label for="split" class="block mb-1">Split (Yes/No):</label>
+                    <select id="split" name="split" required
+                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                        <option value="">Select Option</option>
+                        <option value="True">Yes</option>
+                        <option value="False">No</option>
+                    </select>
+                </div>
+            </fieldset>
         </div>
 
         <div class="mb-4">
@@ -79,15 +91,6 @@
                 class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
         </div>
 
-        <div class="mb-4">
-            <label for="split" class="block mb-1">Split (Yes/No):</label>
-            <select id="split" name="split" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
-                <option value="">Select Option</option>
-                <option value="True">Yes</option>
-                <option value="False">No</option>
-            </select>
-        </div>
 
         <input type="submit" value="Submit"
             class="w-full bg-green-500 text-white font-bold py-2 px-4 rounded cursor-pointer hover:bg-green-600">

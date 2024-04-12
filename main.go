@@ -289,10 +289,8 @@ func main() {
 			c.Request.ParseForm()
 			session := sessions.Default(c)
 
-			cost, _ := strconv.ParseFloat(c.PostForm("cost"), 32)
 			age, _ := strconv.ParseInt(c.PostForm("age"), 10, 32)
 			date, _ := time.Parse(time.DateOnly, c.PostForm("date"))
-			split, _ := strconv.ParseBool(c.PostForm("split"))
 			owner := session.Get("user")
 			if owner == nil {
 				c.AbortWithStatus(http.StatusForbidden)
@@ -308,19 +306,33 @@ func main() {
 				c.Redirect(http.StatusBadRequest, "/dates")
 			}
 
+			var runningTotal float32 = 0
+			length := len(c.PostFormArray("place"))
+			places := make([]*Place, length)
+			for i := 0; i < length; i++ {
+				split, _ := strconv.ParseBool(c.PostFormArray("split")[i])
+				cost, _ := strconv.ParseFloat(c.PostFormArray("cost")[i], 32)
+				place := &Place{
+					Place:       capitalizeAndTrim(c.PostFormArray("place")[i]),
+					TypeOfPlace: c.PostFormArray("type_of_place")[i],
+					Cost:        float32(cost),
+					Split:       split,
+				}
+				places[i] = place
+				runningTotal += float32(cost)
+			}
+
 			newDate := &Date{
 				OwnerId:    objId,
 				FirstName:  firstName,
 				LastName:   lastName,
 				Ethnicity:  capitalizeAndTrim(c.PostForm("ethnicity")),
 				Occupation: capitalizeAndTrim(c.PostForm("occupation")),
-				Place:      c.PostForm("place"),
-				TypeOfDate: c.PostForm("type_of_date"),
-				Cost:       float32(cost),
+				Places:     places,
+				Cost:       runningTotal,
 				Result:     c.PostForm("result"),
 				Age:        int32(age),
 				Date:       date,
-				Split:      split,
 				CreatedAt:  time.Now(),
 			}
 
@@ -328,6 +340,7 @@ func main() {
 			if err != nil {
 				log.Fatalln("insertion to db failed", err)
 			}
+			log.Println(newDate)
 
 			c.Redirect(http.StatusFound, "/dates")
 		})

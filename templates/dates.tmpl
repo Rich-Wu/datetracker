@@ -37,12 +37,26 @@
           <td class="border px-4 py-2">{{ .Age }}</td>
           <td class="border px-4 py-2">{{ .Ethnicity }}</td>
           <td class="border px-4 py-2">{{ .Occupation }}</td>
-          <td class="border px-4 py-2">{{ .Place }}</td>
-          <td class="border px-4 py-2">{{ .TypeOfDate }}</td>
+          <td class="border px-4 py-2"></td>
+          <td class="border px-4 py-2"></td>
           <td class="border px-4 py-2 text-right">{{ .Cost | formatCost }}</td>
-          <td class="border px-4 py-2">{{ .Split | formatSplit }}</td>
+          <td class="border px-4 py-2"></td>
           <td class="border px-4 py-2">{{ .Result }}</td>
         </tr>
+          {{ range .Places }}
+          <tr>
+            <td class="border px-4 py-2"></td>
+            <td class="border px-4 py-2"></td>
+            <td class="border px-4 py-2"></td>
+            <td class="border px-4 py-2"></td>
+            <td class="border px-4 py-2"></td>
+            <td class="border px-4 py-2"></td>
+            <td class="border px-4 py-2">{{ .Place }}</td>
+            <td class="border px-4 py-2">{{ .TypeOfPlace }}</td>
+            <td class="border px-4 py-2 text-right">{{ .Cost | formatCost }}</td>
+            <td class="border px-4 py-2">{{ .Split | formatSplit }}</td>
+          </tr>
+          {{ end }}
         {{ end }}
       </tbody>
     </table>
