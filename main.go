@@ -70,12 +70,21 @@ func main() {
 		Keys:    bson.M{"username": 1}, // Create a unique index on the "username" field
 		Options: options.Index().SetUnique(true),
 	}
-
 	// Create the unique index
-	_, err = usersCollection.Indexes().CreateOne(context.Background(), indexModel)
+	name, err := usersCollection.Indexes().CreateOne(context.Background(), indexModel)
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("Name of Index Created: " + name)
+
+	indexModel = mongo.IndexModel{
+		Keys: bson.D{{Key: "ownerId", Value: 1}},
+	}
+	name, err = datesCollection.Indexes().CreateOne(context.Background(), indexModel)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Name of Index Created: " + name)
 
 	router = gin.Default()
 	sessionsStore := mongodriver.NewStore(sessionsCollection, 3600, true, []byte(secret))
