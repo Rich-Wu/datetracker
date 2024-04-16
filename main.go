@@ -19,6 +19,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func main() {
@@ -32,6 +34,7 @@ func main() {
 	var datesCollection *mongo.Collection
 	var sessionsCollection *mongo.Collection
 	var router *gin.Engine
+	var caser cases.Caser
 
 	if Stage == DEV {
 		db_uri = DEV_MONGO
@@ -86,6 +89,8 @@ func main() {
 	}
 	fmt.Println("Name of Index Created: " + name)
 
+	caser = cases.Title(language.AmericanEnglish)
+
 	router = gin.Default()
 	sessionsStore := mongodriver.NewStore(sessionsCollection, 3600, true, []byte(secret))
 	router.Use(sessions.Sessions("session", sessionsStore))
@@ -130,7 +135,7 @@ func main() {
 		username := session.Get("username")
 		user := session.Get("user")
 		if user == nil || username == nil {
-			c.AbortWithStatus(http.StatusForbidden)
+			renderError(c, http.StatusForbidden)
 			return
 		}
 		findOptions := options.Find()
@@ -260,20 +265,21 @@ func main() {
 			// Hash the password before storing it
 			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+				renderError(c, http.StatusInternalServerError)
+				return
 			}
 
 			newUser := &User{
-				UserName:  c.PostForm("username"),
-				FirstName: c.PostForm("first_name"),
-				LastName:  c.PostForm("last_name"),
+				UserName:  sanitizeUsername(c.PostForm("username")),
+				FirstName: caser.String(c.PostForm("first_name")),
+				LastName:  caser.String(c.PostForm("last_name")),
 				Password:  string(hashedPassword),
 			}
 
 			result, err := usersCollection.InsertOne(context.Background(), newUser)
 			if err != nil {
-				log.Println("insertion to db failed", err)
-				c.JSON(http.StatusUnprocessableEntity, errors.New(err.Error()))
+				renderError(c, http.StatusUnprocessableEntity)
+				return
 			}
 
 			session.Set("username", c.PostForm("username"))
@@ -291,19 +297,23 @@ func main() {
 
 			age, _ := strconv.ParseInt(c.PostForm("age"), 10, 32)
 			date, _ := time.Parse(time.DateOnly, c.PostForm("date"))
+
 			owner := session.Get("user")
 			if owner == nil {
-				c.AbortWithStatus(http.StatusForbidden)
+				renderError(c, http.StatusForbidden)
+				return
 			}
 			objId, err := primitive.ObjectIDFromHex(owner.(string))
 			if err != nil {
-				c.AbortWithStatus(http.StatusForbidden)
+				renderError(c, http.StatusForbidden)
+				return
 			}
 			if isValidName(c.PostForm("first_name")) && isValidName(c.PostForm("last_name")) {
-				firstName = capitalizeAndTrim(c.PostForm("first_name"))
-				lastName = capitalizeAndTrim(c.PostForm("last_name"))
+				firstName = caser.String(c.PostForm("first_name"))
+				lastName = caser.String(c.PostForm("last_name"))
 			} else {
-				c.Redirect(http.StatusBadRequest, "/dates")
+				renderError(c, http.StatusBadRequest)
+				return
 			}
 
 			var runningTotal float32 = 0
@@ -313,7 +323,7 @@ func main() {
 				split, _ := strconv.ParseBool(c.PostFormArray("split")[i])
 				cost, _ := strconv.ParseFloat(c.PostFormArray("cost")[i], 32)
 				place := &Place{
-					Place:       capitalizeAndTrim(c.PostFormArray("place")[i]),
+					Place:       caser.String(c.PostFormArray("place")[i]),
 					TypeOfPlace: c.PostFormArray("type_of_place")[i],
 					Cost:        float32(cost),
 					Split:       split,
@@ -326,8 +336,8 @@ func main() {
 				OwnerId:    objId,
 				FirstName:  firstName,
 				LastName:   lastName,
-				Ethnicity:  capitalizeAndTrim(c.PostForm("ethnicity")),
-				Occupation: capitalizeAndTrim(c.PostForm("occupation")),
+				Ethnicity:  caser.String(c.PostForm("ethnicity")),
+				Occupation: caser.String(c.PostForm("occupation")),
 				Places:     places,
 				Cost:       runningTotal,
 				Result:     c.PostForm("result"),
@@ -338,9 +348,9 @@ func main() {
 
 			_, err = datesCollection.InsertOne(context.Background(), newDate)
 			if err != nil {
-				log.Fatalln("insertion to db failed", err)
+				renderError(c, http.StatusInternalServerError)
+				return
 			}
-			log.Println(newDate)
 
 			c.Redirect(http.StatusFound, "/dates")
 		})
