@@ -57,7 +57,7 @@ func renderError(c *gin.Context, code int) {
 		"errorCode": http.StatusForbidden,
 		"errorName": "Forbidden Page",
 		"errorMessage": "Uh oh! You seem to have stumbled somewhere you shouldn't have. Please make sure you have permission " +
-			"to access the request resource. If you are sure you should be able to access this page, please contact us for " +
+			"to access the requested resource. If you are sure you should be able to access this page, please contact us for " +
 			"assistance.",
 	}
 	errorMap[404] = &gin.H{

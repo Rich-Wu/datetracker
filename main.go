@@ -160,8 +160,8 @@ func main() {
 		for cursor.Next(context.Background()) {
 			var result Date
 			if err := cursor.Decode(&result); err != nil {
-				fmt.Println("Error decoding document:", err)
-				c.AbortWithError(http.StatusInternalServerError, err)
+				log.Println("Error decoding document:", err)
+				renderError(c, http.StatusInternalServerError)
 			}
 			dates = append(dates, result)
 		}
