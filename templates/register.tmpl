@@ -9,7 +9,7 @@
 
 <body>
     <h2>Register</h2>
-    <form action="/api/user/new" method="POST">
+    <form action="/api/user/new" method="POST" enctype="multipart/form-data">
         <div>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username">
@@ -25,6 +25,10 @@
         <div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" minlength=8>
+        </div>
+        <div>
+            <label for="Profile Picture">Profile Picture</label>
+            <input type="file" name="profilePic" id="profilePic" accept="image/*">
         </div>
         <div>
             <button type="submit">Register</button>

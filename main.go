@@ -4,10 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 	"text/template"
 	"time"
 
@@ -34,6 +37,7 @@ func main() {
 	var datesCollection *mongo.Collection
 	var sessionsCollection *mongo.Collection
 	var router *gin.Engine
+	// String processor
 	var caser cases.Caser
 
 	if Stage == DEV {
@@ -94,12 +98,6 @@ func main() {
 	router = gin.Default()
 	sessionsStore := mongodriver.NewStore(sessionsCollection, 3600, true, []byte(secret))
 	router.Use(sessions.Sessions("session", sessionsStore))
-	router.Use(func(c *gin.Context) {
-		if c.Writer.Status() == http.StatusNotFound {
-			c.HTML(http.StatusNotFound, "notfound.tmpl", nil)
-		}
-		c.Next()
-	})
 	router.SetFuncMap(template.FuncMap{
 		"formatCost":  formatCost,
 		"formatDate":  formatDate,
@@ -256,24 +254,77 @@ func main() {
 
 			c.JSON(http.StatusOK, foundDates)
 		})
-
+		api.GET("/user/:id", func(c *gin.Context) {
+			userId, err := primitive.ObjectIDFromHex(c.Param("id"))
+			if err != nil {
+				log.Println("An error occurred while looking up the user:", err)
+				renderError(c, http.StatusBadRequest)
+				return
+			}
+			userResult := usersCollection.FindOne(context.Background(), bson.D{{Key: "_id", Value: userId}}, options.FindOne())
+			foundUser := &User{}
+			userResult.Decode(&foundUser)
+			c.JSON(200, foundUser)
+		})
 		api.POST("/user/new", func(c *gin.Context) {
 			c.Request.ParseForm()
 			session := sessions.Default(c)
 			password := c.PostForm("password")
-
 			// Hash the password before storing it
 			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 			if err != nil {
 				renderError(c, http.StatusInternalServerError)
 				return
 			}
+			username := sanitizeUsername(c.PostForm("username"))
+
+			// Profile picture processing
+			var fileName string
+			profilePic, err := c.FormFile("profilePic")
+			if err != nil {
+				if errors.Is(err, http.ErrMissingFile) {
+					fileName = "default-pfp.jpeg"
+				} else {
+					log.Println("There was an unexpected error:", err)
+					renderError(c, http.StatusBadRequest)
+					return
+				}
+			} else {
+				filetype := strings.ToLower(profilePic.Header.Get("Content-Type"))
+				if !SUPPORTED_IMAGE_TYPES[strings.ToLower(profilePic.Header.Get("Content-Type"))] {
+					log.Println("Unsupported filetype detected:", profilePic.Header.Get("Content-Type"))
+					renderError(c, http.StatusBadRequest)
+					return
+				}
+				// Save file to disk
+				fileName = strings.ToLower(username) + "-pfp." + getFiletypeFromMime(filetype)
+				f, err := os.OpenFile(filepath.Join(IMAGES_PATH, fileName), os.O_WRONLY|os.O_CREATE, 0666)
+				if err != nil {
+					log.Println("Error creating file:", err)
+					renderError(c, http.StatusInternalServerError)
+					return
+				}
+				defer f.Close()
+				file, err := profilePic.Open()
+				if err != nil {
+					log.Println("Error opening uploaded image:", err)
+					renderError(c, http.StatusBadRequest)
+					return
+				}
+				_, err = io.Copy(f, file)
+				if err != nil {
+					log.Println("Error copying uploaded image:", err)
+					renderError(c, http.StatusBadRequest)
+					return
+				}
+			}
 
 			newUser := &User{
-				UserName:  sanitizeUsername(c.PostForm("username")),
-				FirstName: caser.String(c.PostForm("first_name")),
-				LastName:  caser.String(c.PostForm("last_name")),
-				Password:  string(hashedPassword),
+				UserName:   sanitizeUsername(c.PostForm("username")),
+				FirstName:  caser.String(c.PostForm("first_name")),
+				LastName:   caser.String(c.PostForm("last_name")),
+				Password:   string(hashedPassword),
+				ProfilePic: fileName,
 			}
 
 			result, err := usersCollection.InsertOne(context.Background(), newUser)

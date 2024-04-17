@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -41,6 +42,11 @@ func sanitizeUsername(username string) string {
 	username = re.ReplaceAllString(username, "")
 
 	return username
+}
+
+func getFiletypeFromMime(mime string) string {
+	parts := strings.Split(mime, "/")
+	return parts[len(parts)-1]
 }
 
 // Use this function as shorthand for c.HTML(code, "error.tmpl", *custom error data)
