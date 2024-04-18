@@ -72,6 +72,12 @@ func renderError(c *gin.Context, code int) {
 		"errorMessage": "Oh no! We couldn't find the resource you were looking for. Please try searching for your resource " +
 			"again, or if you are sure the resource exists, please report this issue to us and we'll find out what's wrong. ",
 	}
+	errorMap[409] = &gin.H{
+		"errorCode": http.StatusConflict,
+		"errorName": "Resource Conflict",
+		"errorMessage": "There's a conflict a-brewing. A requested resource was being accessed and cannot be " +
+			"accessed at this time. Please retry your request at a later time.",
+	}
 	errorMap[422] = &gin.H{
 		"errorCode": http.StatusUnprocessableEntity,
 		"errorName": "Unprocessable Content",

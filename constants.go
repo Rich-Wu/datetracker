@@ -7,6 +7,7 @@ const (
 	DEV_MONGO      = "mongodb://localhost:27017"
 	DEV_PORT       = 8080
 	DEV_SECRET     = "secret"
+	EMAILS_TABLE   = "emails"
 	IMAGES_PATH    = "./images"
 	PROD           = "PROD"
 	SESSIONS_STORE = "sessions"

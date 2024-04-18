@@ -1,4 +1,5 @@
 runtime: go121
 service: default
+app_engine_apis: true
 env_variables:
   STAGE: "PROD"

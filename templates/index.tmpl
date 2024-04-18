@@ -1,41 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+{{ template "headHTML" }}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date Tracker - Welcome</title>
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 py-8 flex justify-center items-center h-screen">
-        <div class="max-w-md w-full">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-center mb-4">Welcome to Date Tracker</h1>
-                <p class="text-lg text-center">
-                    The ultimate tool for data-driven dating, . In the world of modern romance, finding the perfect
-                    match can be challenging. Date Tracker simplifies this process by leveraging data analytics to help
-                    you make informed decisions about your love life. Our platform provides comprehensive tracking and
-                    analysis of your dating journey, empowering you to identify patterns, preferences, and potential
-                    compatibility factors.
-                    <br />
-                    Whether you're a seasoned dater or new to the scene, Date Tracker is your indispensable companion on
-                    the quest for love. Say goodbye to guesswork and hello to data-driven romance with Date Tracker.
-                </p>
-            </div>
-            <div class="flex justify-center space-x-4 mb-8">
-                <a href="/login"
-                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-lg font-semibold">Login</a>
-                <a href="/register"
-                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md text-lg font-semibold">Register</a>
-            </div>
-        </div>
-        <div class="max-w-md w-full">
-            <img src="https://via.placeholder.com/400" alt="Hero Image" class="w-full rounded-lg shadow-md">
-        </div>
-    </div>
+<body>
+    <header>
+        <h1 class="mb-2">littleblackbook.io</h1>
+        <p class="mb-2">Discover the essence of your dating journey by unlocking insights from your experiences, and let
+            them guide you towards making authentic connections.</p>
+    </header>
+    <form class="flex mb-8" id="signup-form" action="/email" method="POST">
+        <input type="email" name="email" id="email" placeholder="Email Address">
+        <input type="submit" value="Sign Up">
+    </form>
+    <footer>
+        <ul class="icons">
+            <li class="bg-red-100">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                </svg>
+            </li>
+        </ul>
+    </footer>
 </body>
 
 </html>

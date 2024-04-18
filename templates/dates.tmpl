@@ -5,8 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Date Tracker</title>
-  <!-- Include Tailwind CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="./static/styles.css" rel="stylesheet">
 </head>
 
 <body class="p-4">
@@ -43,20 +42,20 @@
           <td class="border px-4 py-2"></td>
           <td class="border px-4 py-2">{{ .Result }}</td>
         </tr>
-          {{ range .Places }}
-          <tr>
-            <td class="border px-4 py-2"></td>
-            <td class="border px-4 py-2"></td>
-            <td class="border px-4 py-2"></td>
-            <td class="border px-4 py-2"></td>
-            <td class="border px-4 py-2"></td>
-            <td class="border px-4 py-2"></td>
-            <td class="border px-4 py-2">{{ .Place }}</td>
-            <td class="border px-4 py-2">{{ .TypeOfPlace }}</td>
-            <td class="border px-4 py-2 text-right">{{ .Cost | formatCost }}</td>
-            <td class="border px-4 py-2">{{ .Split | formatSplit }}</td>
-          </tr>
-          {{ end }}
+        {{ range .Places }}
+        <tr>
+          <td class="border px-4 py-2"></td>
+          <td class="border px-4 py-2"></td>
+          <td class="border px-4 py-2"></td>
+          <td class="border px-4 py-2"></td>
+          <td class="border px-4 py-2"></td>
+          <td class="border px-4 py-2"></td>
+          <td class="border px-4 py-2">{{ .Place }}</td>
+          <td class="border px-4 py-2">{{ .TypeOfPlace }}</td>
+          <td class="border px-4 py-2 text-right">{{ .Cost | formatCost }}</td>
+          <td class="border px-4 py-2">{{ .Split | formatSplit }}</td>
+        </tr>
+        {{ end }}
         {{ end }}
       </tbody>
     </table>

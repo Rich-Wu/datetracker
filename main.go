@@ -17,6 +17,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/mongo/mongodriver"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -24,6 +25,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
+	"google.golang.org/appengine/v2/mail"
 )
 
 func main() {
@@ -33,6 +35,7 @@ func main() {
 	var db_uri string
 	var secret string
 	var client *mongo.Client
+	var emailsCollection *mongo.Collection
 	var usersCollection *mongo.Collection
 	var datesCollection *mongo.Collection
 	var sessionsCollection *mongo.Collection
@@ -68,6 +71,7 @@ func main() {
 	log.Printf("Successfully connected to mongodb at %s\n", clientOptions.GetURI())
 
 	db = client.Database(APP_NAME)
+	emailsCollection = db.Collection(EMAILS_TABLE)
 	usersCollection = db.Collection(USERS_TABLE)
 	datesCollection = db.Collection(DATES_TABLE)
 	sessionsCollection = db.Collection(SESSIONS_STORE)
@@ -79,6 +83,16 @@ func main() {
 	}
 	// Create the unique index
 	name, err := usersCollection.Indexes().CreateOne(context.Background(), indexModel)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Name of Index Created: " + name)
+
+	indexModel = mongo.IndexModel{
+		Keys:    bson.M{"email": 1},
+		Options: options.Index().SetUnique(true),
+	}
+	name, err = emailsCollection.Indexes().CreateOne(context.Background(), indexModel)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -106,6 +120,15 @@ func main() {
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/*.tmpl")
 
+	router.GET("/test", func(c *gin.Context) {
+		renderError(c, 404)
+	})
+	router.GET("/termsOfService", func(c *gin.Context) {
+		c.File("./static/termsOfService.txt")
+	})
+	router.GET("/privacyPolicy", func(c *gin.Context) {
+		c.File("./static/privacyPolicy.txt")
+	})
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 	})
@@ -206,6 +229,39 @@ func main() {
 			"dates":    dates,
 		})
 	})
+	router.POST("/email", func(c *gin.Context) {
+		c.Request.ParseForm()
+
+		email := &Email{}
+		if err := c.ShouldBindWith(email, binding.Form); err != nil {
+			log.Println("An invalid email was provided:", email.Address)
+			renderError(c, http.StatusBadRequest)
+			return
+		}
+		email.SignupTime = time.Now().UTC()
+
+		_, err := emailsCollection.InsertOne(context.Background(), email)
+		if err != nil {
+			log.Println("Error occurred when saving an email to db:", err)
+			renderError(c, http.StatusUnprocessableEntity)
+			return
+		}
+
+		msg := &mail.Message{
+			Sender:  "richie1988@gmail.com",
+			To:      []string{"Richard <Richie1988@gmail.com>"},
+			Subject: "Thank you for your interest in littleblackbook",
+			Body:    "You are now on the in the inner circle of lbb. We'll be letting you know about new developments as well as we get closer to launching",
+		}
+
+		if err := mail.Send(c, msg); err != nil {
+			log.Println("An error occurred sending a response mail:", err)
+		}
+
+		c.HTML(http.StatusOK, "confirm.tmpl", gin.H{
+			"email": email.Address,
+		})
+	})
 	router.POST("/login", func(c *gin.Context) {
 		session := sessions.Default(c)
 		c.Request.ParseForm()
@@ -238,7 +294,8 @@ func main() {
 			cursor, err := datesCollection.Find(context.Background(), bson.D{}, findOptions)
 			if err != nil {
 				log.Println("Error finding documents:", err)
-				c.AbortWithError(http.StatusConflict, err)
+				renderError(c, http.StatusConflict)
+				return
 			}
 			defer cursor.Close(context.Background())
 
@@ -247,7 +304,8 @@ func main() {
 				var result Date
 				if err := cursor.Decode(&result); err != nil {
 					fmt.Println("Error decoding document:", err)
-					c.AbortWithError(http.StatusInternalServerError, err)
+					renderError(c, http.StatusInternalServerError)
+					return
 				}
 				foundDates = append(foundDates, result)
 			}
