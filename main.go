@@ -234,7 +234,7 @@ func main() {
 
 		email := &Email{}
 		if err := c.ShouldBindWith(email, binding.Form); err != nil {
-			log.Println("An invalid email was provided:", email.Address)
+			log.Println("An invalid email was provided:", email.Address, err, email.Name)
 			renderError(c, http.StatusBadRequest)
 			return
 		}
@@ -249,7 +249,7 @@ func main() {
 
 		msg := &mail.Message{
 			Sender:  "richie1988@gmail.com",
-			To:      []string{"Richard <Richie1988@gmail.com>"},
+			To:      []string{fmt.Sprintf("%s <%s>", email.Name, email.Address)},
 			Subject: "Thank you for your interest in littleblackbook",
 			Body:    "You are now on the in the inner circle of lbb. We'll be letting you know about new developments as well as we get closer to launching",
 		}
@@ -259,7 +259,7 @@ func main() {
 		}
 
 		c.HTML(http.StatusOK, "confirm.tmpl", gin.H{
-			"email": email.Address,
+			"email": email,
 		})
 	})
 	router.POST("/login", func(c *gin.Context) {
