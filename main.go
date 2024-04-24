@@ -87,7 +87,7 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("Name of Index Created: " + name)
-
+	// Create unique email index for emails collection
 	indexModel = mongo.IndexModel{
 		Keys:    bson.M{"email": 1},
 		Options: options.Index().SetUnique(true),
@@ -261,6 +261,18 @@ func main() {
 		c.HTML(http.StatusOK, "confirm.tmpl", gin.H{
 			"email": email,
 		})
+	})
+	router.POST("/email/unsubscribe/:email", func(c *gin.Context) {
+		email := c.Param("email")
+		if email == "" {
+			log.Println("Bad visitor to unsubscribe route")
+			renderError(c, http.StatusBadRequest)
+			return
+		}
+
+		deleteResult, _ := emailsCollection.DeleteOne(context.Background(), bson.D{{Key: "email", Value: email}}, &options.DeleteOptions{})
+
+		c.JSON(http.StatusOK, deleteResult)
 	})
 	router.POST("/login", func(c *gin.Context) {
 		session := sessions.Default(c)

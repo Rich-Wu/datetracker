@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Date Tracker</title>
-  <link href="./static/styles.css" rel="stylesheet">
-</head>
+{{ template "headHTML" }}
 
 <body class="p-4">
   <h1 class="text-2xl font-bold mb-4 center">{{ if .username }}{{ .username }}'s {{ else }}My {{end}}Dates</h1>
@@ -63,4 +55,4 @@
 
 </body>
 
-</html>
+{{ template "footerHTML" }}
