@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -118,10 +119,15 @@ func main() {
 		"formatSplit": formatSplit,
 	})
 	router.Static("/static", "./static")
-	router.LoadHTMLGlob("templates/*.tmpl")
+	router.LoadHTMLGlob("templates/**/*.tmpl")
 
-	router.GET("/test", func(c *gin.Context) {
-		renderError(c, 404)
+	// router.GET("/test", func(c *gin.Context) {
+
+	// })
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
 	})
 	router.GET("/termsOfService", func(c *gin.Context) {
 		c.File("./static/termsOfService.txt")
@@ -240,18 +246,29 @@ func main() {
 		}
 		email.SignupTime = time.Now().UTC()
 
-		_, err := emailsCollection.InsertOne(context.Background(), email)
+		id, err := emailsCollection.InsertOne(context.Background(), email)
 		if err != nil {
 			log.Println("Error occurred when saving an email to db:", err)
 			renderError(c, http.StatusUnprocessableEntity)
 			return
 		}
 
+		var confirmMail bytes.Buffer
+		tmpl, _ := template.ParseGlob("./templates/email/confirm.tmpl")
+		err = tmpl.ExecuteTemplate(&confirmMail, "email/confirm.tmpl", gin.H{
+			"email": email,
+			"id":    id.InsertedID.(primitive.ObjectID).Hex(),
+		})
+		if err != nil {
+			log.Println("An error occurred when rendering:", err)
+			return
+		}
+		log.Println("output:", confirmMail.String())
 		msg := &mail.Message{
-			Sender:  "richie1988@gmail.com",
-			To:      []string{fmt.Sprintf("%s <%s>", email.Name, email.Address)},
-			Subject: "Thank you for your interest in littleblackbook",
-			Body:    "You are now on the in the inner circle of lbb. We'll be letting you know about new developments as well as we get closer to launching",
+			Sender:   "richie1988@gmail.com",
+			To:       []string{fmt.Sprintf("%s <%s>", email.Name, email.Address)},
+			Subject:  "Thank you for your interest in littleblackbook",
+			HTMLBody: confirmMail.String(),
 		}
 
 		if err := mail.Send(c, msg); err != nil {
@@ -262,15 +279,20 @@ func main() {
 			"email": email,
 		})
 	})
-	router.POST("/email/unsubscribe/:email", func(c *gin.Context) {
-		email := c.Param("email")
-		if email == "" {
+	router.GET("/email/unsubscribe/:id", func(c *gin.Context) {
+		id, err := primitive.ObjectIDFromHex(c.Param("id"))
+		if err != nil {
 			log.Println("Bad visitor to unsubscribe route")
 			renderError(c, http.StatusBadRequest)
 			return
 		}
 
-		deleteResult, _ := emailsCollection.DeleteOne(context.Background(), bson.D{{Key: "email", Value: email}}, &options.DeleteOptions{})
+		deleteResult, err := emailsCollection.DeleteOne(context.Background(), bson.D{{Key: "_id", Value: id}}, options.Delete())
+		if err != nil {
+			log.Println("Error occurred when deleting an email:", err)
+			renderError(c, http.StatusBadRequest)
+			return
+		}
 
 		c.JSON(http.StatusOK, deleteResult)
 	})
