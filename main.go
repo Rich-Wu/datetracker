@@ -263,7 +263,6 @@ func main() {
 			log.Println("An error occurred when rendering:", err)
 			return
 		}
-		log.Println("output:", confirmMail.String())
 		msg := &mail.Message{
 			Sender:   "richie1988@gmail.com",
 			To:       []string{fmt.Sprintf("%s <%s>", email.Name, email.Address)},

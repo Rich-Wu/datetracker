@@ -1,21 +1,22 @@
 {{ template "headHTML" }}
 
-<body>
+<body class="dark:bg-gray-300">
     <header>
         <h1 class="mb-2">littleblackbook.io</h1>
         <p class="mb-2">Discover the essence of your dating journey by unlocking insights from your experiences, and let
-            them guide you towards making authentic connections.</p>
+            them guide you towards making the authentic connections you're looking for.</p>
+        <p class="mb-2">This page is still in development. Sign up below for our newsletter and to be kept updated with development news:</p>
     </header>
     <form class="flex mb-8" id="signup-form" action="/email" method="POST">
-        <input type="text" name="name" id="name" placeholder="Name">
-        <input type="email" name="email" id="email" placeholder="Email Address">
+        <input type="text" name="name" id="name" placeholder="Name" autocomplete="given-name">
+        <input type="email" name="email" id="email" placeholder="Email Address" autocomplete="email">
         <input type="submit" value="Sign Up">
     </form>
     <footer>
-        <ul class="icons">
-            <li class="bg-red-100">
+        <ul class="icons flex rounded">
+            <li class="bg-slate-300 text-red-600 text-xl">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-6 h-6">
+                    stroke="currentColor" class="w-px h-px">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                 </svg>
