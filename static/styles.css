@@ -498,7 +498,8 @@ form {
 }
 
 footer {
-  bottom: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 *, ::before, ::after {
@@ -659,6 +660,22 @@ input.horizontal {
 
 input.vertical {
   margin-bottom: 0.5rem;
+}
+
+input[type='submit'] {
+  border-style: none;
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 118 110 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(226 232 240 / var(--tw-text-opacity));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+input[type='submit']:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(20 184 166 / var(--tw-bg-opacity));
 }
 
 /**

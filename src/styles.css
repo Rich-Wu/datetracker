@@ -40,7 +40,7 @@
         }
     }
     footer {
-        @apply bottom-4;
+        @apply py-4;
     }
   }
 
@@ -53,5 +53,8 @@
     }
     input.vertical {
         @apply mb-2;
+    }
+    input[type='submit'] {
+        @apply bg-teal-700 hover:bg-teal-500 border-none text-slate-200 transition-colors;
     }
   }
