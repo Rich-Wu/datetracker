@@ -1,21 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-</head>
+{{ template "headHTML" }}
 
 <body>
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username"><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Login">
+    <h1 class="text-center">Login</h1>
+    <form class="flex flex-col max-w-48" action="/login" method="POST">
+        <label for="username">Username:</label>
+        <input class="vertical" type="text" id="username" name="username">
+        <label for="password">Password:</label>
+        <input class="vertical" type="password" id="password" name="password">
+        <input class="bg-teal-700 hover:bg-teal-500 border-none text-slate-200 vertical" type="submit" value="Login">
     </form>
-</body>
 
-</html>
+    {{ template "footerHTML" }}
