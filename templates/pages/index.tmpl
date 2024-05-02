@@ -1,25 +1,36 @@
 {{ template "headHTML" }}
 
-<body class="dark:bg-gray-300">
+<body class="flex flex-col justify-center dark:bg-slate-600 ml-10 lg:max-w-4xl min-h-screen">
     <header>
         <h1 class="mb-2">littleblackbook.io</h1>
         <p class="mb-2">Discover the essence of your dating journey by unlocking insights from your experiences, and let
             them guide you towards making the authentic connections you're looking for.</p>
-        <p class="mb-2">This page is still in development. Sign up below for our newsletter and to be kept updated with development news:</p>
+        <p class="mb-2">This page is still in development. Sign up below for our newsletter and to be kept updated with
+            development news:</p>
     </header>
     <form class="flex mb-8" id="signup-form" action="/email" method="POST">
-        <input type="text" name="name" id="name" placeholder="Name" autocomplete="given-name">
-        <input type="email" name="email" id="email" placeholder="Email Address" autocomplete="email">
-        <input type="submit" value="Sign Up">
+        <input class="border-2 mr-2 border-opacity-75" type="text" name="name" id="name" placeholder="Name" autocomplete="given-name" required>
+        <input class="border-2 mr-2 border-opacity-75" type="email" name="email" id="email" placeholder="Email Address" autocomplete="email" required>
+        <input class="bg-teal-700 hover:bg-teal-500 mr-2 text-slate-200" type="submit" value="Sign Up">
     </form>
     <footer>
-        <ul class="icons flex rounded">
-            <li class="bg-slate-300 text-red-600 text-xl">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-px h-px">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                </svg>
+        <ul class="flex icons">
+            <li class="text-gray-300">
+                <a href="http://facebook.com" target="_blank" rel="noopener noreferrer">
+                    <i class="bx bxl-facebook-square"></i>
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                    <i class="bx bxl-instagram"></i>
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+                    <i class='bx bxl-twitter'></i>
+                </a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                    <i class='bx bxl-github'></i>
+                </a>
+                <a href="mailto:admin@littleblackbook.io" target="_blank" rel="noopener noreferrer">
+                    <i class='bx bx-envelope'></i>
+                </a>
             </li>
         </ul>
     </footer>

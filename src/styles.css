@@ -27,17 +27,16 @@
 
  @layer base {
     body {
+        @apply tracking-tight dark:bg-slate-700 dark:text-slate-200;
         font-family: 'Courier New', Courier, monospace;
+        padding: 1rem;
     }
     h1 {
-        @apply text-3xl
+        @apply text-2xl;
     }
-  }
-
-  @layer variants {
-    dark {
-        body {
-            background-color: grey;
+    form {
+        input {
+            @apply rounded px-2 py-1 bg-transparent border-gray-400 text-inherit;
         }
     }
   }
