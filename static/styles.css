@@ -464,37 +464,68 @@ body {
 }
 
 body {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   padding: 1rem;
 }
 
 h1 {
+  margin-bottom: 1rem;
   font-size: 2.25rem;
   line-height: 2.5rem;
+  font-weight: 700;
 }
 
-form {
-  input {
-    border-radius: 0.25rem;
+h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
+
+input {
+  border-radius: 0.25rem;
+  border-width: 2px;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity));
+  --tw-border-opacity: 0.75;
+  background-color: transparent;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  color: inherit;
+}
+
+@keyframes beat {
+  0%, 100% {
+    transform: scale(1);
   }
-  input {
-    --tw-border-opacity: 1;
-    border-color: rgb(156 163 175 / var(--tw-border-opacity));
+
+  50% {
+    transform: scale(1.05);
   }
-  input {
-    background-color: transparent;
-  }
-  input {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-  input {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-  }
-  input {
-    color: inherit;
-  }
+}
+
+input:focus {
+  animation: beat 0.1s linear 1;
+  border-color: rgb(15 118 110 / var(--tw-border-opacity));
+  --tw-border-opacity: 0.95;
+  outline:none;
+}
+
+input[type="submit"] {
+  border-style: none;
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 118 110 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(226 232 240 / var(--tw-text-opacity));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+input[type="submit"]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(20 184 166 / var(--tw-bg-opacity));
 }
 
 footer {
@@ -649,33 +680,12 @@ footer {
   }
 }
 
-input {
-  border-width: 2px;
-  --tw-border-opacity: 0.75;
-}
-
 input.horizontal {
   margin-right: 0.5rem;
 }
 
 input.vertical {
   margin-bottom: 0.5rem;
-}
-
-input[type='submit'] {
-  border-style: none;
-  --tw-bg-opacity: 1;
-  background-color: rgb(15 118 110 / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: rgb(226 232 240 / var(--tw-text-opacity));
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-input[type='submit']:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(20 184 166 / var(--tw-bg-opacity));
 }
 
 /**

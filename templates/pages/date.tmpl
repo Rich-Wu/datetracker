@@ -1,39 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
+{{ template "headHTML" }}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date Form</title>
-    <link href="./static/styles.css" rel="stylesheet">
-    <script type="text/javascript" src="/static/scripts.js"></script>
-</head>
-
-<body class="p-4">
-    <h2 class="text-2xl font-bold mb-4">Date Form</h2>
-    <form action="/api/date/new" method="post" class="max-w-md mx-auto">
+<body>
+    <h2 class="text-center">Date Form</h2>
+    <form action="/api/date/new" method="post" class="mx-auto max-w-md">
         <div class="mb-4">
             <label for="first_name" class="block mb-1">First Name:</label>
             <input type="text" id="first_name" name="first_name" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
         </div>
 
         <div class="mb-4">
             <label for="last_name" class="block mb-1">Last Name:</label>
             <input type="text" id="last_name" name="last_name"
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
         </div>
 
         <div class="mb-4">
             <label for="ethnicity" class="block mb-1">Ethnicity:</label>
             <input type="text" id="ethnicity" name="ethnicity" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
         </div>
 
         <div class="mb-4">
             <label for="occupation" class="block mb-1">Occupation:</label>
             <input type="text" id="occupation" name="occupation" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
         </div>
         <button onclick="addPlace(event)">Add another venue</button>
         <div id="places">
@@ -41,12 +32,12 @@
                 <div class="mb-4">
                     <label for="place" class="block mb-1">Location:</label>
                     <input type="text" name="place" required
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                        class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
                 </div>
                 <div class="mb-4">
                     <label for="type_of_place" class="block mb-1">Type of Date:</label>
                     <select name="type_of_place" required
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                        class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
                         <option value="">Select Type</option>
                         <option value="Meal">Meal</option>
                         <option value="Drink">Drink</option>
@@ -58,12 +49,12 @@
                 <div class="mb-4">
                     <label for="cost" class="block mb-1">Cost:</label>
                     <input type="text" name="cost" required
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                        class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
                 </div>
                 <div class="mb-4">
                     <label for="split" class="block mb-1">Split (Yes/No):</label>
                     <select name="split" required
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                        class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
                         <option value="">Select Option</option>
                         <option value="True">Yes</option>
                         <option value="False">No</option>
@@ -75,25 +66,24 @@
         <div class="mb-4">
             <label for="result" class="block mb-1">How Ended:</label>
             <input type="text" id="result" name="result" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
         </div>
 
         <div class="mb-4">
             <label for="age" class="block mb-1">Age:</label>
             <input type="text" id="age" name="age" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
         </div>
 
         <div class="mb-4">
             <label for="date" class="block mb-1">Date:</label>
             <input type="date" id="date" name="date" required
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500">
+                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
         </div>
 
 
         <input type="submit" value="Submit"
-            class="w-full bg-green-500 text-white font-bold py-2 px-4 rounded cursor-pointer hover:bg-green-600">
+            class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded w-full font-bold text-white cursor-pointer">
     </form>
-</body>
 
-</html>
+    {{ template "footerHTML" }}

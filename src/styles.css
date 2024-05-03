@@ -2,59 +2,61 @@
  * This injects Tailwind's base styles and any base styles registered by
  * plugins.
  */
- @tailwind base;
+@tailwind base;
 
- /**
+/**
   * This injects Tailwind's component classes and any component classes
   * registered by plugins.
   */
- @tailwind components;
- 
- /**
+@tailwind components;
+
+/**
   * This injects Tailwind's utility classes and any utility classes registered
   * by plugins.
   */
- @tailwind utilities;
- 
- /**
+@tailwind utilities;
+
+/**
   * Use this directive to control where Tailwind injects the hover, focus,
   * responsive, dark mode, and other variants of each class.
   *
   * If omitted, Tailwind will append these classes to the very end of
   * your stylesheet by default.
   */
- @tailwind variants;
+@tailwind variants;
 
- @layer base {
-    body {
-        @apply tracking-tight dark:bg-slate-900 dark:text-slate-200;
-        font-family: 'Courier New', Courier, monospace;
-        padding: 1rem;
-    }
-    h1 {
-        @apply text-4xl;
-    }
-    form {
-        input {
-            @apply rounded px-2 py-1 bg-transparent border-gray-400 text-inherit;
-        }
-    }
-    footer {
-        @apply py-4;
-    }
+@layer base {
+  body {
+    @apply tracking-tight dark:bg-slate-900 dark:text-slate-200;
+    font-family: "Courier New", Courier, monospace;
+    padding: 1rem;
   }
+  h1 {
+    @apply font-bold text-4xl mb-4;
+  }
+  h2 {
+    @apply font-bold text-2xl mb-4;
+  }
+  input {
+    @apply rounded px-2 py-1 bg-transparent border-gray-400 text-inherit border-2 border-opacity-75;
+  }
+  input:focus {
+    @apply border-teal-700 border-opacity-95 animate-beat-once;
+    outline:none;
+  }
+  input[type="submit"] {
+    @apply bg-teal-700 hover:bg-teal-500 border-none text-slate-200 transition-colors;
+  }
+  footer {
+    @apply py-4;
+  }
+}
 
-  @layer components {
-    input {
-        @apply border-2 border-opacity-75;
-    }
-    input.horizontal {
-        @apply mr-2;
-    }
-    input.vertical {
-        @apply mb-2;
-    }
-    input[type='submit'] {
-        @apply bg-teal-700 hover:bg-teal-500 border-none text-slate-200 transition-colors;
-    }
+@layer components {
+  input.horizontal {
+    @apply mr-2;
   }
+  input.vertical {
+    @apply mb-2;
+  }
+}
