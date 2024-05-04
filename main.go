@@ -117,6 +117,7 @@ func main() {
 		"formatCost":  formatCost,
 		"formatDate":  formatDate,
 		"formatSplit": formatSplit,
+		"getHex":      getHex,
 	})
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/**/*.tmpl")

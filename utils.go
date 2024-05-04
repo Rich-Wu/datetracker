@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func formatDate(date time.Time) string {
@@ -47,6 +48,10 @@ func sanitizeUsername(username string) string {
 func getFiletypeFromMime(mime string) string {
 	parts := strings.Split(mime, "/")
 	return parts[len(parts)-1]
+}
+
+func getHex(objectId primitive.ObjectID) string {
+	return objectId.Hex()
 }
 
 // Use this function as shorthand for c.HTML(code, "error.tmpl", *custom error data)
