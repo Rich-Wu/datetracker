@@ -482,7 +482,12 @@ h2 {
   font-weight: 700;
 }
 
+label {
+  margin-bottom: 0.25rem;
+}
+
 input {
+  width: 100%;
   border-radius: 0.25rem;
   border-width: 2px;
   border-color: rgb(156 163 175 / var(--tw-border-opacity));
@@ -509,7 +514,7 @@ input:focus {
   animation: beat 0.1s linear 1;
   border-color: rgb(15 118 110 / var(--tw-border-opacity));
   --tw-border-opacity: 0.95;
-  outline:none;
+  outline: none;
 }
 
 input[type="submit"] {
@@ -680,11 +685,11 @@ footer {
   }
 }
 
-input.horizontal {
+.horizontal {
   margin-right: 0.5rem;
 }
 
-input.vertical {
+.vertical {
   margin-bottom: 0.5rem;
 }
 
@@ -708,10 +713,6 @@ input.vertical {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
-}
-
-.mb-1 {
-  margin-bottom: 0.25rem;
 }
 
 .mb-2 {
@@ -752,6 +753,10 @@ input.vertical {
 
 .mt-6 {
   margin-top: 1.5rem;
+}
+
+.mb-3 {
+  margin-bottom: 0.75rem;
 }
 
 .block {
@@ -902,6 +907,10 @@ input.vertical {
 
 .border {
   border-width: 1px;
+}
+
+.border-t-2 {
+  border-top-width: 2px;
 }
 
 .border-none {
@@ -1141,16 +1150,6 @@ input.vertical {
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.focus\:border-blue-500:focus {
-  --tw-border-opacity: 1;
-  border-color: rgb(59 130 246 / var(--tw-border-opacity));
-}
-
-.focus\:outline-none:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
 }
 
 .focus-visible\:outline:focus-visible {

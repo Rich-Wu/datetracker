@@ -1,7 +1,7 @@
 {{ template "headHTML" }}
 
 <body class="flex flex-col justify-center ml-10 lg:max-w-4xl min-h-screen">
-    <header>
+    <header class="mb-4">
         <h1 class="mb-2">littleblackbook.io</h1>
         <p class="mb-2">Discover the essence of your dating journey by unlocking insights from your experiences, and let
             them guide you towards making the authentic connections you're looking for.</p>
@@ -9,11 +9,13 @@
             development news:</p>
     </header>
     <form class="flex mb-8" id="signup-form" action="/email" method="POST">
-        <input class="horizontal" type="text" name="name" id="name" placeholder="Name" autocomplete="given-name" required>
-        <input class="horizontal" type="email" name="email" id="email" placeholder="Email Address" autocomplete="email" required>
-        <input class="bg-teal-700 hover:bg-teal-500 border-none text-slate-200" type="submit" value="Sign Up">
+        <input class="horizontal" type="text" name="name" id="name" placeholder="Name" autocomplete="given-name"
+            required>
+        <input class="horizontal" type="email" name="email" id="email" placeholder="Email Address" autocomplete="email"
+            required>
+        <input type="submit" value="Newsletter Sign Up">
     </form>
-    <footer>
+    <footer class="border-t-2">
         <ul class="flex icons">
             <li class="text-gray-300">
                 <a href="http://facebook.com" target="_blank" rel="noopener noreferrer">

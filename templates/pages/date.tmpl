@@ -3,41 +3,35 @@
 <body>
     <h2 class="text-center">Date Form</h2>
     <form action="/api/date/new" method="post" class="mx-auto max-w-md">
-        <div class="mb-4">
-            <label for="first_name" class="block mb-1">First Name:</label>
-            <input type="text" id="first_name" name="first_name" required
-                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+        <div class="vertical">
+            <label for="first_name" class="block">First Name:</label>
+            <input type="text" id="first_name" name="first_name" required>
         </div>
 
-        <div class="mb-4">
-            <label for="last_name" class="block mb-1">Last Name:</label>
-            <input type="text" id="last_name" name="last_name"
-                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+        <div class="vertical">
+            <label for="last_name" class="block">Last Name:</label>
+            <input type="text" id="last_name" name="last_name">
         </div>
 
-        <div class="mb-4">
-            <label for="ethnicity" class="block mb-1">Ethnicity:</label>
-            <input type="text" id="ethnicity" name="ethnicity" required
-                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+        <div class="vertical">
+            <label for="ethnicity" class="block">Ethnicity:</label>
+            <input type="text" id="ethnicity" name="ethnicity" required>
         </div>
 
-        <div class="mb-4">
-            <label for="occupation" class="block mb-1">Occupation:</label>
-            <input type="text" id="occupation" name="occupation" required
-                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+        <div class="vertical">
+            <label for="occupation" class="block">Occupation:</label>
+            <input type="text" id="occupation" name="occupation" required>
         </div>
         <button onclick="addPlace(event)">Add another venue</button>
         <div id="places">
             <fieldset>
-                <div class="mb-4">
-                    <label for="place" class="block mb-1">Location:</label>
-                    <input type="text" name="place" required
-                        class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+                <div class="vertical">
+                    <label for="place" class="block">Location:</label>
+                    <input type="text" name="place" required>
                 </div>
-                <div class="mb-4">
-                    <label for="type_of_place" class="block mb-1">Type of Date:</label>
-                    <select name="type_of_place" required
-                        class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+                <div class="vertical">
+                    <label for="type_of_place" class="block">Type of Date:</label>
+                    <select name="type_of_place" required>
                         <option value="">Select Type</option>
                         <option value="Meal">Meal</option>
                         <option value="Drink">Drink</option>
@@ -46,15 +40,13 @@
                         <option value="Adventure">Adventure</option>
                     </select>
                 </div>
-                <div class="mb-4">
-                    <label for="cost" class="block mb-1">Cost:</label>
-                    <input type="text" name="cost" required
-                        class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+                <div class="vertical">
+                    <label for="cost" class="block">Cost:</label>
+                    <input type="text" name="cost" required>
                 </div>
-                <div class="mb-4">
-                    <label for="split" class="block mb-1">Split (Yes/No):</label>
-                    <select name="split" required
-                        class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+                <div class="vertical">
+                    <label for="split" class="block">Split (Yes/No):</label>
+                    <select name="split" required>
                         <option value="">Select Option</option>
                         <option value="True">Yes</option>
                         <option value="False">No</option>
@@ -63,22 +55,19 @@
             </fieldset>
         </div>
 
-        <div class="mb-4">
-            <label for="result" class="block mb-1">How Ended:</label>
-            <input type="text" id="result" name="result" required
-                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+        <div class="vertical">
+            <label for="result" class="block">How Ended:</label>
+            <input type="text" id="result" name="result" required>
         </div>
 
-        <div class="mb-4">
-            <label for="age" class="block mb-1">Age:</label>
-            <input type="text" id="age" name="age" required
-                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+        <div class="vertical">
+            <label for="age" class="block">Age:</label>
+            <input type="text" id="age" name="age" required>
         </div>
 
-        <div class="mb-4">
-            <label for="date" class="block mb-1">Date:</label>
-            <input type="date" id="date" name="date" required
-                class="px-4 py-2 border focus:border-blue-500 rounded-md w-full focus:outline-none">
+        <div class="vertical">
+            <label for="date" class="block">Date:</label>
+            <input type="date" id="date" name="date" required>
         </div>
 
 

@@ -2,9 +2,9 @@
 
 <body>
     <h1 class="text-center">Login</h1>
-    <form class="flex flex-col max-w-48" action="/login" method="POST">
+    <form autocomplete="on" class="mx-auto max-w-md" action="/login" method="POST">
         <label for="username">Username:</label>
-        <input class="vertical" type="text" id="username" name="username" autocomplete="username">
+        <input class="vertical" type="text" id="username" name="username" autocomplete="on">
         <label for="password">Password:</label>
         <input class="vertical" type="password" id="password" name="password" autocomplete="current-password">
         <input class="vertical" type="submit" value="Login">

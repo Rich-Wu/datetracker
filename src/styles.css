@@ -37,12 +37,15 @@
   h2 {
     @apply font-bold text-2xl mb-4;
   }
+  label {
+    @apply mb-1;
+  }
   input {
-    @apply rounded px-2 py-1 bg-transparent border-gray-400 text-inherit border-2 border-opacity-75;
+    @apply rounded px-2 py-1 bg-transparent border-gray-400 text-inherit border-2 border-opacity-75 w-full;
   }
   input:focus {
     @apply border-teal-700 border-opacity-95 animate-beat-once;
-    outline:none;
+    outline: none;
   }
   input[type="submit"] {
     @apply bg-teal-700 hover:bg-teal-500 border-none text-slate-200 transition-colors;
@@ -53,10 +56,10 @@
 }
 
 @layer components {
-  input.horizontal {
+  .horizontal {
     @apply mr-2;
   }
-  input.vertical {
+  .vertical {
     @apply mb-2;
   }
 }
