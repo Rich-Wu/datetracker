@@ -1,39 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration</title>
-</head>
-
+{{ template "headHTML" }}
 <body>
-    <h2>Register</h2>
-    <form action="/api/user/new" method="POST" enctype="multipart/form-data">
-        <div>
+    <h2 class="text-center">Register</h2>
+    <form action="/api/user/new" method="POST" enctype="multipart/form-data" autocomplete="on" class="mx-auto max-w-md">
+        <div class="vertical">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
+            <input type="text" id="username" name="username" autocomplete="username">
         </div>
-        <div>
+        <div class="vertical">
             <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name">
+            <input type="text" id="first_name" name="first_name" autocomplete="given-name">
         </div>
-        <div>
+        <div class="vertical">
             <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name">
+            <input type="text" id="last_name" name="last_name" autocomplete="family-name">
         </div>
-        <div>
+        <div class="vertical">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" minlength=8>
+            <input type="password" id="password" name="password" minlength=8 autocomplete="new-password">
         </div>
-        <div>
+        <div class="vertical">
             <label for="Profile Picture">Profile Picture</label>
             <input type="file" name="profilePic" id="profilePic" accept="image/*">
         </div>
         <div>
-            <button type="submit">Register</button>
+            <input type="submit" value="Register"></input>
         </div>
     </form>
-</body>
-
-</html>
+{{ template "footerHTML" }}
