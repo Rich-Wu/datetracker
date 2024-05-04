@@ -1,11 +1,12 @@
 {{ template "headHTML" }}
 
 <body class="p-4">
-  <h1 class="text-2xl font-bold mb-4 center">{{ if .username }}{{ .username }}'s {{ else }}My {{end}}Dates</h1>
+  <h1 class="mb-4 font-bold text-2xl center">{{ if .username }}{{ .username }}'s {{ else }}My {{end}}Dates</h1>
   <div class="overflow-x-auto">
-    <table class="w-full table-auto border-collapse border border-gray-300">
+    <table class="border-collapse border-gray-300 border w-full table-auto">
       <thead>
         <tr class="bg-gray-100">
+          <th class="px-4 py-2"></th>
           <th class="px-4 py-2">Date</th>
           <th class="px-4 py-2">First Name</th>
           <th class="px-4 py-2">Last Name</th>
@@ -22,31 +23,52 @@
       <tbody id="table-body">
         {{ range .dates }}
         <tr>
-          <td class="border px-4 py-2">{{ .Date | formatDate }}</td>
-          <td class="border px-4 py-2">{{ .FirstName }}</td>
-          <td class="border px-4 py-2">{{ .LastName }}</td>
-          <td class="border px-4 py-2">{{ .Age }}</td>
-          <td class="border px-4 py-2">{{ .Ethnicity }}</td>
-          <td class="border px-4 py-2">{{ .Occupation }}</td>
-          <td class="border px-4 py-2"></td>
-          <td class="border px-4 py-2"></td>
-          <td class="border px-4 py-2 text-right">{{ .Cost | formatCost }}</td>
-          <td class="border px-4 py-2"></td>
-          <td class="border px-4 py-2">{{ .Result }}</td>
+          {{ if len .Places | eq 1 }}
+          <td></td>
+          <td>{{ .Date | formatDate }}</td>
+          <td>{{ .FirstName }}</td>
+          <td>{{ .LastName }}</td>
+          <td>{{ .Age }}</td>
+          <td>{{ .Ethnicity }}</td>
+          <td>{{ .Occupation }}</td>
+          {{ range .Places }}
+          <td>{{ .Place }}</td>
+          <td>{{ .TypeOfPlace }}</td>
+          <td class="text-right">{{ .Cost | formatCost }}</td>
+          <td>{{ .Split | formatSplit }}</td>
+          {{ end }}
+          <td>{{ .Result }}</td>
+          {{ else }}
+          <td class="text-center">
+            <i class='bx bxs-down-arrow'></i>
+          </td>
+          <td>{{ .Date | formatDate }}</td>
+          <td>{{ .FirstName }}</td>
+          <td>{{ .LastName }}</td>
+          <td>{{ .Age }}</td>
+          <td>{{ .Ethnicity }}</td>
+          <td>{{ .Occupation }}</td>
+          <td></td>
+          <td></td>
+          <td class="text-right"></td>
+          <td></td>
+          <td>{{ .Result }}</td>
         </tr>
         {{ range .Places }}
         <tr>
-          <td class="border px-4 py-2"></td>
-          <td class="border px-4 py-2"></td>
-          <td class="border px-4 py-2"></td>
-          <td class="border px-4 py-2"></td>
-          <td class="border px-4 py-2"></td>
-          <td class="border px-4 py-2"></td>
-          <td class="border px-4 py-2">{{ .Place }}</td>
-          <td class="border px-4 py-2">{{ .TypeOfPlace }}</td>
-          <td class="border px-4 py-2 text-right">{{ .Cost | formatCost }}</td>
-          <td class="border px-4 py-2">{{ .Split | formatSplit }}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>{{ .Place }}</td>
+          <td>{{ .TypeOfPlace }}</td>
+          <td class="text-right">{{ .Cost | formatCost }}</td>
+          <td>{{ .Split | formatSplit }}</td>
         </tr>
+        {{ end }}
         {{ end }}
         {{ end }}
       </tbody>

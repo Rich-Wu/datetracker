@@ -2,10 +2,10 @@
 
 <body>
     <h2 class="text-center">Date Form</h2>
-    <form action="/api/date/new" method="post" class="mx-auto max-w-md">
+    <form action="/api/date/new" method="post" class="mx-auto max-w-md" autocomplete="on">
         <div class="vertical">
             <label for="first_name" class="block">First Name:</label>
-            <input type="text" id="first_name" name="first_name" required>
+            <input type="text" id="first_name" name="first_name" autocomplete="given-name">
         </div>
 
         <div class="vertical">
@@ -27,11 +27,11 @@
             <fieldset>
                 <div class="vertical">
                     <label for="place" class="block">Location:</label>
-                    <input type="text" name="place" required>
+                    <input type="text" name="place" id="place" required>
                 </div>
                 <div class="vertical">
                     <label for="type_of_place" class="block">Type of Date:</label>
-                    <select name="type_of_place" required>
+                    <select name="type_of_place" id="type_of_place" required>
                         <option value="">Select Type</option>
                         <option value="Meal">Meal</option>
                         <option value="Drink">Drink</option>
@@ -42,11 +42,11 @@
                 </div>
                 <div class="vertical">
                     <label for="cost" class="block">Cost:</label>
-                    <input type="text" name="cost" required>
+                    <input type="text" name="cost" id="cost" required>
                 </div>
                 <div class="vertical">
                     <label for="split" class="block">Split (Yes/No):</label>
-                    <select name="split" required>
+                    <select name="split" id="split" required>
                         <option value="">Select Option</option>
                         <option value="True">Yes</option>
                         <option value="False">No</option>

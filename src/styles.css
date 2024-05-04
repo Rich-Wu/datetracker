@@ -47,11 +47,20 @@
     @apply border-teal-700 border-opacity-95 animate-beat-once;
     outline: none;
   }
+  select {
+    @apply rounded px-2 py-1 bg-transparent border-gray-400 text-inherit border-2 border-opacity-75 w-full;
+  }
   input[type="submit"] {
     @apply bg-teal-700 hover:bg-teal-500 border-none text-slate-200 transition-colors;
   }
   footer {
     @apply py-4;
+  }
+  th {
+    @apply dark:bg-slate-600;
+  }
+  td {
+    @apply px-4 py-2 border;
   }
 }
 
