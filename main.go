@@ -301,13 +301,20 @@ func main() {
 		c.Request.ParseForm()
 		filter := bson.D{{Key: "username", Value: c.PostForm("username")}}
 		userResult := usersCollection.FindOne(context.Background(), filter, options.FindOne())
+		if userResult.Err() != nil {
+			renderError(c, http.StatusForbidden)
+		}
 
 		foundUser := &User{}
-		userResult.Decode(foundUser)
-
-		err := bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(c.PostForm("password")))
+		err := userResult.Decode(foundUser)
 		if err != nil {
-			c.AbortWithError(http.StatusForbidden, err)
+			log.Printf("An error occurred decoding a userResult")
+			renderError(c, http.StatusInternalServerError)
+		}
+
+		err = bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(c.PostForm("password")))
+		if err != nil {
+			renderError(c, http.StatusForbidden)
 		}
 
 		session.Set("user", foundUser.ID.Hex())

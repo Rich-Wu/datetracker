@@ -71,4 +71,7 @@
   .vertical {
     @apply mb-2;
   }
+  .token {
+    @apply text-xs;
+  }
 }

@@ -13,16 +13,24 @@
             <input type="text" id="last_name" name="last_name">
         </div>
 
-        <div class="vertical">
+        <!-- <div class="vertical">
             <label for="ethnicity" class="block">Ethnicity:</label>
             <input type="text" id="ethnicity" name="ethnicity" required>
+        </div> -->
+
+        <div class="token-input-container vertical">
+            <label for="ethnicity" class="block">Ethnicity</label>
+            <div class="token-list" id="token-list"></div>
+            <div>
+                <input type="text" id="token-input" placeholder="Type and press Enter">
+            </div>
         </div>
 
         <div class="vertical">
             <label for="occupation" class="block">Occupation:</label>
             <input type="text" id="occupation" name="occupation" required>
         </div>
-        <button onclick="addPlace(event)">Add another venue</button>
+        <button>Add another venue</button>
         <div id="places">
             <fieldset>
                 <div class="vertical">

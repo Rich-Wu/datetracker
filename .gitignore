@@ -23,3 +23,4 @@ go.work
 /images/*.jpg
 /images/*.jpeg
 /images/*.png
+/static/*.js
