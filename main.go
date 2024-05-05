@@ -482,11 +482,15 @@ func main() {
 				runningTotal += float32(cost)
 			}
 
+			length = len(c.PostForm("ethnicity"))
+			ethnicities := c.PostForm("ethnicity")[:length-1]
+			ethnicitiesList := strings.Split(ethnicities, ",")
+
 			newDate := &Date{
 				OwnerId:    objId,
 				FirstName:  firstName,
 				LastName:   lastName,
-				Ethnicity:  caser.String(c.PostForm("ethnicity")),
+				Ethnicity:  ethnicitiesList,
 				Occupation: caser.String(c.PostForm("occupation")),
 				Places:     places,
 				Cost:       runningTotal,

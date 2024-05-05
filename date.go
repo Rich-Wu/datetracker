@@ -13,7 +13,7 @@ type Date struct {
 	LastName   string             `json:"lastName,omitempty" bson:"lastName,omitempty" form:"last_name"`
 	Age        int32              `json:"age" bson:"age" form:"age" binding:"required"`
 	Occupation string             `json:"occupation,omitempty" bson:"occupation,omitempty" form:"occupation"`
-	Ethnicity  string             `json:"ethnicity,omitempty" bson:"ethnicity,omitempty" form:"ethnicity" binding:"required"`
+	Ethnicity  []string           `json:"ethnicity,omitempty" bson:"ethnicity,omitempty" form:"ethnicity" binding:"required"`
 	Places     []*Place           `json:"places" bson:"places" form:"places" binding:"required,min=1"`
 	Cost       float32            `json:"cost" bson:"cost,truncate" binding:"required"`
 	Result     string             `json:"result,omitempty" bson:"result,omitempty" form:"result"`

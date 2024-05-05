@@ -13,17 +13,13 @@
             <input type="text" id="last_name" name="last_name">
         </div>
 
-        <!-- <div class="vertical">
-            <label for="ethnicity" class="block">Ethnicity:</label>
-            <input type="text" id="ethnicity" name="ethnicity" required>
-        </div> -->
-
         <div class="token-input-container vertical">
-            <label for="ethnicity" class="block">Ethnicity</label>
-            <div class="token-list" id="token-list"></div>
+            <label for="ethnicity-input" class="block">Ethnicity:</label>
             <div>
-                <input type="text" id="token-input" placeholder="Type and press Enter">
+                <input type="text" class="token-input" id="ethnicity-input" placeholder="Type and press Enter">
             </div>
+            <div class="token-list" id="ethnicity-list"></div>
+            <input type="hidden" name="ethnicity" id="ethnicities">
         </div>
 
         <div class="vertical">
