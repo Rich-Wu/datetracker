@@ -28,3 +28,4 @@
 /images/*.jpeg
 /images/*.png
 /src
+*/*.csv
