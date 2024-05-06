@@ -83,7 +83,7 @@
     function toggle(event) {
       let arrow = event.target;
       let id = arrow.getAttribute("data-id");
-      let children = document.querySelectorAll('[data-date]');
+      let children = document.querySelectorAll(`[data-date='${id}']`);
       children.forEach((node) => {
         node.classList.toggle("hidden");
       })

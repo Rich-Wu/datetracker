@@ -78,6 +78,6 @@
     @apply cursor-pointer hover:text-red-500 ml-1 text-gray-400;
   }
   .token-list {
-    @apply flex flex-wrap px-0 py-0 max-w-100;
+    @apply flex flex-wrap px-0 py-0 max-w-full;
   }
 }

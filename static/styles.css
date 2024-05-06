@@ -735,6 +735,10 @@ td {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
   display: flex;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
   cursor: default;
   border-radius: 9999px;
   --tw-bg-opacity: 1;
@@ -763,6 +767,7 @@ td {
 
 .token-list {
   display: flex;
+  max-width: 100%;
   flex-wrap: wrap;
   padding-left: 0px;
   padding-right: 0px;
