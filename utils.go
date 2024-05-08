@@ -11,6 +11,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+func dateString(date time.Time) string {
+	year, month, day := date.Date()
+	return fmt.Sprintf("%d-%02d-%02d", year, month, day)
+}
+
 func formatDate(date time.Time) string {
 	return date.Format("01/02/2006")
 }
@@ -43,6 +48,10 @@ func sanitizeUsername(username string) string {
 	username = re.ReplaceAllString(username, "")
 
 	return username
+}
+
+func toSingleString(stringArr []string) string {
+	return strings.Join(stringArr, ",") + ","
 }
 
 func getFiletypeFromMime(mime string) string {

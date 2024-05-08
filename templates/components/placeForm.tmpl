@@ -1,0 +1,49 @@
+{{ define "placeForm" }}
+<fieldset>
+    {{ if . }}
+    {{ range . }}
+    <div class="vertical">
+        <label for="place" class="block">Location:</label>
+        <input type="text" name="place" id="place" value="{{ .Place }}" required>
+    </div>
+    <div class="vertical">
+        <label for="type_of_place" class="block">Type of Date:</label>
+        <select name="type_of_place" id="type_of_place" required>
+            <option value="">Select Type</option>
+            <option value="Restaurant" {{ if .TypeOfPlace | eq "Restaurant" }}selected{{ end }}>Meal</option>
+            <option value="Drinks" {{ if .TypeOfPlace | eq "Drinks" }}selected{{ end }}>Drinks</option>
+            <option value="Dessert" {{ if .TypeOfPlace | eq "Dessert" }}selected{{ end }}>Dessert</option>
+            <option value="Casual" {{ if .TypeOfPlace | eq "Casual" }}selected{{ end }}>Casual</option>
+            <option value="Formal"{{ if .TypeOfPlace | eq "Formal" }}selected{{ end }}>Formal</option>
+            <option value="Adventure" {{ if .TypeOfPlace | eq "Adventure" }}selected{{ end }}>Adventure</option>
+        </select>
+    </div>
+    <div class="vertical">
+        <label for="cost" class="block">Cost:</label>
+        <input type="text" name="cost" id="cost" value="{{ .Cost }}" required>
+    </div>
+    {{ end }}
+    {{ else }}
+    <div class="vertical">
+        <label for="place" class="block">Location:</label>
+        <input type="text" name="place" id="place" required>
+    </div>
+    <div class="vertical">
+        <label for="type_of_place" class="block">Type of Date:</label>
+        <select name="type_of_place" id="type_of_place" required>
+            <option value="">Select Type</option>
+            <option value="Restaurant">Restaurant</option>
+            <option value="Drinks">Drinks</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Casual">Casual</option>
+            <option value="Formal">Formal</option>
+            <option value="Adventure">Adventure</option>
+        </select>
+    </div>
+    <div class="vertical">
+        <label for="cost" class="block">Cost:</label>
+        <input type="text" name="cost" id="cost" required>
+    </div>
+    {{ end }}
+</fieldset>
+{{ end }}

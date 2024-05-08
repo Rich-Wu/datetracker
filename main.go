@@ -114,10 +114,12 @@ func main() {
 	sessionsStore := mongodriver.NewStore(sessionsCollection, 3600, true, []byte(secret))
 	router.Use(sessions.Sessions("session", sessionsStore))
 	router.SetFuncMap(template.FuncMap{
-		"formatCost":  formatCost,
-		"formatDate":  formatDate,
-		"formatSplit": formatSplit,
-		"getHex":      getHex,
+		"dateString":     dateString,
+		"formatCost":     formatCost,
+		"formatDate":     formatDate,
+		"formatSplit":    formatSplit,
+		"getHex":         getHex,
+		"toSingleString": toSingleString,
 	})
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/**/*.tmpl")
@@ -236,6 +238,45 @@ func main() {
 			"dates":    dates,
 		})
 	})
+	router.GET("/date/edit/:id", func(c *gin.Context) {
+		session := sessions.Default(c)
+		username := session.Get("username")
+		user := session.Get("user")
+		if user == nil || username == nil {
+			renderError(c, http.StatusForbidden)
+			return
+		}
+		idHex := c.Param("id")
+		id, err := primitive.ObjectIDFromHex(idHex)
+		if err != nil {
+			renderError(c, http.StatusNotFound)
+			return
+		}
+		dateResult := datesCollection.FindOne(context.Background(), bson.D{{Key: "_id", Value: id}}, options.FindOne())
+		if dateResult.Err() != nil {
+			log.Println("Error when finding a date result:", err)
+			renderError(c, http.StatusNotFound)
+			return
+		}
+
+		date := &Date{}
+		err = dateResult.Decode(date)
+		if err != nil {
+			log.Println("Decoding date result failed:", err)
+			renderError(c, http.StatusInternalServerError)
+			return
+		}
+		if date.OwnerId.Hex() != user {
+			log.Println("Mismatched user and date")
+			renderError(c, http.StatusForbidden)
+			return
+		}
+
+		c.HTML(200, "date.tmpl", gin.H{
+			"id":   idHex,
+			"date": date,
+		})
+	})
 	router.POST("/email", func(c *gin.Context) {
 		c.Request.ParseForm()
 
@@ -325,6 +366,88 @@ func main() {
 	})
 	api := router.Group("/api")
 	{
+		api.POST("/date/:id", func(c *gin.Context) {
+			session := sessions.Default(c)
+			user := session.Get("user")
+			c.Request.ParseForm()
+			userId, err := primitive.ObjectIDFromHex(user.(string))
+			if err != nil {
+				log.Println("Invalid user in session", err)
+				renderError(c, http.StatusNotFound)
+				return
+			}
+			dateId := c.Param("id")
+			dateObjId, err := primitive.ObjectIDFromHex(dateId)
+			if err != nil {
+				log.Println("Invalid date specified", err)
+				renderError(c, http.StatusNotFound)
+				return
+			}
+			date := &Date{}
+			dateResult := datesCollection.FindOne(context.Background(), bson.D{{Key: "_id", Value: dateObjId}, {Key: "ownerId", Value: userId}}, options.FindOne())
+			err = dateResult.Decode(date)
+			if err != nil {
+				log.Println("Error occurred when decoding result", err)
+				renderError(c, http.StatusInternalServerError)
+				return
+			}
+
+			var firstName string
+			var lastName string
+			age, _ := strconv.ParseInt(c.PostForm("age"), 10, 32)
+			dateString, _ := time.Parse(time.DateOnly, c.PostForm("date"))
+
+			if isValidName(c.PostForm("first_name")) {
+				firstName = caser.String(c.PostForm("first_name"))
+				lastName = caser.String(c.PostForm("last_name"))
+			} else {
+				renderError(c, http.StatusBadRequest)
+				return
+			}
+
+			var runningTotal float32 = 0
+			length := len(c.PostFormArray("place"))
+			places := make([]*Place, length)
+			for i := 0; i < length; i++ {
+				cost, _ := strconv.ParseFloat(c.PostFormArray("cost")[i], 32)
+				place := &Place{
+					Place:       caser.String(c.PostFormArray("place")[i]),
+					TypeOfPlace: c.PostFormArray("type_of_place")[i],
+					Cost:        float32(cost),
+				}
+				places[i] = place
+				runningTotal += float32(cost)
+			}
+
+			length = len(c.PostForm("ethnicity"))
+			ethnicities := c.PostForm("ethnicity")[:length-1]
+			ethnicitiesList := strings.Split(ethnicities, ",")
+			split, _ := strconv.ParseBool(c.PostForm("split"))
+
+			updatedDate := &Date{
+				OwnerId:    userId,
+				FirstName:  firstName,
+				LastName:   lastName,
+				Ethnicity:  ethnicitiesList,
+				Occupation: caser.String(c.PostForm("occupation")),
+				Places:     places,
+				Split:      split,
+				Cost:       runningTotal,
+				Result:     c.PostForm("result"),
+				Age:        int32(age),
+				Date:       dateString,
+				CreatedAt:  time.Now(),
+			}
+
+			_, err = datesCollection.ReplaceOne(context.Background(), bson.D{{Key: "_id", Value: date.ID}}, updatedDate, &options.ReplaceOptions{})
+			if err != nil {
+				log.Println("An error occurred when updating a date record:", err)
+				renderError(c, http.StatusInternalServerError)
+				return
+			}
+
+			c.Redirect(303, "/dates")
+		})
 		api.GET("/dates", func(c *gin.Context) {
 			findOptions := options.Find()
 			// Sort by the date of occurrence, descending and then recency of insertion for tiebreaking
@@ -470,13 +593,11 @@ func main() {
 			length := len(c.PostFormArray("place"))
 			places := make([]*Place, length)
 			for i := 0; i < length; i++ {
-				split, _ := strconv.ParseBool(c.PostFormArray("split")[i])
 				cost, _ := strconv.ParseFloat(c.PostFormArray("cost")[i], 32)
 				place := &Place{
 					Place:       caser.String(c.PostFormArray("place")[i]),
 					TypeOfPlace: c.PostFormArray("type_of_place")[i],
 					Cost:        float32(cost),
-					Split:       split,
 				}
 				places[i] = place
 				runningTotal += float32(cost)
@@ -485,6 +606,7 @@ func main() {
 			length = len(c.PostForm("ethnicity"))
 			ethnicities := c.PostForm("ethnicity")[:length-1]
 			ethnicitiesList := strings.Split(ethnicities, ",")
+			split, _ := strconv.ParseBool(c.PostForm("split"))
 
 			newDate := &Date{
 				OwnerId:    objId,
@@ -493,6 +615,7 @@ func main() {
 				Ethnicity:  ethnicitiesList,
 				Occupation: caser.String(c.PostForm("occupation")),
 				Places:     places,
+				Split:      split,
 				Cost:       runningTotal,
 				Result:     c.PostForm("result"),
 				Age:        int32(age),

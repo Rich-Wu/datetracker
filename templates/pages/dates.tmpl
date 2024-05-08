@@ -6,6 +6,9 @@
     <table class="border-collapse border-gray-300 border w-full table-auto">
       <thead>
         <tr class="bg-gray-100">
+          {{ if $.user }}
+          <th></th>
+          {{ end }}
           <th></th>
           <th>Date</th>
           <th>First Name</th>
@@ -24,6 +27,11 @@
         {{ range $_, $date := .dates }}
         <tr>
           {{ if len .Places | eq 1 }}
+          {{ if $.user }}
+          <td>
+            <a href="/date/edit/{{- $date.ID | getHex -}}">link</a>
+          </td>
+          {{ end }}
           <td></td>
           <td>{{ .Date | formatDate }}</td>
           <td>{{ .FirstName }}</td>
@@ -37,10 +45,15 @@
           <td>{{ .Place }}</td>
           <td>{{ .TypeOfPlace }}</td>
           <td class="text-right">{{ .Cost | formatCost }}</td>
-          <td>{{ .Split | formatSplit }}</td>
           {{ end }}
+          <td>{{ .Split | formatSplit }}</td>
           <td>{{ .Result }}</td>
           {{ else }}
+          {{ if $.user }}
+          <td>
+            <a href="/date/edit/{{- $date.ID | getHex -}}">link</a>
+          </td>
+          {{ end }}
           <td class="text-center">
             <i class='bxs-right-arrow bx' onclick="toggle(event)" data-id="{{- $date.ID | getHex -}}"></i>
           </td>
@@ -55,7 +68,7 @@
           <td></td>
           <td></td>
           <td class="text-right">{{ .Cost | formatCost }}</td>
-          <td></td>
+          <td>{{ .Split | formatSplit }}</td>
           <td>{{ .Result }}</td>
         </tr>
         {{ range .Places }}
@@ -67,10 +80,11 @@
           <td></td>
           <td></td>
           <td></td>
+          <td></td>
           <td>{{ .Place }}</td>
           <td>{{ .TypeOfPlace }}</td>
           <td class="text-right">{{ .Cost | formatCost }}</td>
-          <td>{{ .Split | formatSplit }}</td>
+          <td></td>
           <td></td>
         </tr>
         {{ end }}

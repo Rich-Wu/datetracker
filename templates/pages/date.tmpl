@@ -2,15 +2,18 @@
 
 <body>
     <h2 class="text-center">Date Form</h2>
-    <form action="/api/date/new" method="post" class="mx-auto max-w-md" autocomplete="on">
+    <form action="/api/date/{{- if .id -}}{{ .id }}{{- else -}}new{{- end -}}"
+        method="post" class="mx-auto max-w-md" autocomplete="off">
         <div class="vertical">
             <label for="first_name" class="block">First Name:</label>
-            <input type="text" id="first_name" name="first_name" autocomplete="given-name">
+            <input type="text" id="first_name" name="first_name" autocomplete="off" {{- if .date.FirstName
+                -}}value="{{- .date.FirstName -}}" {{- end -}}>
         </div>
 
         <div class="vertical">
             <label for="last_name" class="block">Last Name:</label>
-            <input type="text" id="last_name" name="last_name">
+            <input type="text" id="last_name" name="last_name" {{- if .date.LastName -}}value="{{- .date.LastName -}}"
+                {{- end -}}>
         </div>
 
         <div class="token-input-container vertical">
@@ -18,60 +21,48 @@
             <div>
                 <input type="text" class="token-input" id="ethnicity-input" placeholder="Type and press Enter">
             </div>
-            <div class="token-list" id="ethnicity-list"></div>
-            <input type="hidden" name="ethnicity" id="ethnicities">
+            <div class="token-list" id="ethnicity-list">
+                {{- if .date.Ethnicity -}}
+                {{- template "tokenEditor" .date.Ethnicity -}}
+                {{- end -}}
+            </div>
+            <input type="hidden" name="ethnicity" id="ethnicities" {{ if .date.Ethnicity }}value="{{ .date.Ethnicity | toSingleString }}"{{ end }}>
         </div>
 
         <div class="vertical">
             <label for="occupation" class="block">Occupation:</label>
-            <input type="text" id="occupation" name="occupation" required>
+            <input type="text" id="occupation" name="occupation" {{- if .date.Occupation
+                -}}value="{{- .date.Occupation -}}" {{- end -}} required>
         </div>
-        <button>Add another venue</button>
         <div id="places">
-            <fieldset>
-                <div class="vertical">
-                    <label for="place" class="block">Location:</label>
-                    <input type="text" name="place" id="place" required>
-                </div>
-                <div class="vertical">
-                    <label for="type_of_place" class="block">Type of Date:</label>
-                    <select name="type_of_place" id="type_of_place" required>
-                        <option value="">Select Type</option>
-                        <option value="Meal">Meal</option>
-                        <option value="Drink">Drink</option>
-                        <option value="Casual">Casual</option>
-                        <option value="Formal">Formal</option>
-                        <option value="Adventure">Adventure</option>
-                    </select>
-                </div>
-                <div class="vertical">
-                    <label for="cost" class="block">Cost:</label>
-                    <input type="text" name="cost" id="cost" required>
-                </div>
-                <div class="vertical">
-                    <label for="split" class="block">Split (Yes/No):</label>
-                    <select name="split" id="split" required>
-                        <option value="">Select Option</option>
-                        <option value="True">Yes</option>
-                        <option value="False">No</option>
-                    </select>
-                </div>
-            </fieldset>
+            <button>Add another venue</button>
+            {{ template "placeForm" .date.Places }}
+        </div>
+
+        <div class="vertical">
+            <label for="split" class="block">Split (Yes/No):</label>
+            <select name="split" id="split" required>
+                <option value="">Select Option</option>
+                <option value="True" {{- if .date.Split -}}selected{{- end -}}>Yes</option>
+                <option value="False" {{- if not .date.Split -}}selected{{- end -}}>No</option>
+            </select>
         </div>
 
         <div class="vertical">
             <label for="result" class="block">How Ended:</label>
-            <input type="text" id="result" name="result" required>
+            <input type="text" id="result" name="result" {{- if .date.Result -}}value="{{- .date.Result -}}" {{- end
+                -}}required>
         </div>
 
         <div class="vertical">
             <label for="age" class="block">Age:</label>
-            <input type="text" id="age" name="age" required>
+            <input type="text" id="age" name="age" {{- if .date.Age -}}value="{{- .date.Age -}}" {{- end -}}required>
         </div>
 
         <div class="vertical">
             <label for="date" class="block">Date:</label>
-            <input type="date" id="date" name="date" required>
+            <input type="date" id="date" name="date" {{- if .date.Date -}}value="{{- .date.Date | dateString -}}" {{-
+                end -}}required>
         </div>
 
 
