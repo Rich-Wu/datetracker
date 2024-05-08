@@ -366,6 +366,30 @@ func main() {
 	})
 	api := router.Group("/api")
 	{
+		api.POST("/date/delete/:id", func(c *gin.Context) {
+			session := sessions.Default(c)
+			user := session.Get("user")
+			userId, err := primitive.ObjectIDFromHex(user.(string))
+			if err != nil {
+				log.Println("Invalid user in session", err)
+				renderError(c, http.StatusNotFound)
+				return
+			}
+			dateId := c.Param("id")
+			dateObjId, err := primitive.ObjectIDFromHex(dateId)
+			if err != nil {
+				log.Println("Invalid dateId in url", err)
+				renderError(c, http.StatusNotFound)
+				return
+			}
+			deleteResult := datesCollection.FindOneAndDelete(context.Background(), bson.D{{Key: "_id", Value: dateObjId}, {Key: "ownerId", Value: userId}}, &options.FindOneAndDeleteOptions{})
+			if deleteResult.Err() != nil {
+				log.Println("An error occurred when deleting:", deleteResult.Err().Error())
+				renderError(c, http.StatusNotFound)
+				return
+			}
+			c.Redirect(303, "/dates")
+		})
 		api.POST("/date/:id", func(c *gin.Context) {
 			session := sessions.Default(c)
 			user := session.Get("user")

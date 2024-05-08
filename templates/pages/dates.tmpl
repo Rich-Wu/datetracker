@@ -1,7 +1,15 @@
 {{ template "headHTML" }}
 
 <body class="p-4">
-  <h1 class="mb-4 font-bold text-2xl center">{{ .username }}'s Dates</h1>
+  <div class="flex justify-center">
+    <h1 class="mx-auto my-2 font-bold text-2xl">{{ .username }}'s Dates</h1>
+    {{ if .user }}
+    <a href="/date/new" class="hover:animate-beat-once addDate" type="button">
+      <i class="align-text-top">New Date</i>
+      <i class='text-2xl bx bxs-book-add'></i>
+    </a>
+    {{ end }}
+  </div>
   <div class="overflow-x-auto">
     <table class="border-collapse border-gray-300 border w-full table-auto">
       <thead>
@@ -29,7 +37,16 @@
           {{ if len .Places | eq 1 }}
           {{ if $.user }}
           <td>
-            <a href="/date/edit/{{- $date.ID | getHex -}}">link</a>
+            <div class="flex justify-center align-middle">
+              <a href="/date/edit/{{- $date.ID | getHex -}}">
+                <i class='bx bxs-edit'></i>
+              </a>
+              <form action="/api/date/delete/{{- $date.ID | getHex -}}" method="post">
+                <button type="submit">
+                  <i class='bx bx-x-circle'></i>
+                </button>
+              </form>
+            </div>
           </td>
           {{ end }}
           <td></td>
@@ -38,7 +55,7 @@
           <td>{{ .LastName }}</td>
           <td>{{ .Age }}</td>
           <td class="token-list">
-              {{ template "tokenList" .Ethnicity }}
+            {{ template "tokenList" .Ethnicity }}
           </td>
           <td>{{ .Occupation }}</td>
           {{ range .Places }}
@@ -51,7 +68,16 @@
           {{ else }}
           {{ if $.user }}
           <td>
-            <a href="/date/edit/{{- $date.ID | getHex -}}">link</a>
+            <div class="flex justify-center align-middle">
+              <a href="/date/edit/{{- $date.ID | getHex -}}">
+                <i class='bx bxs-edit'></i>
+              </a>
+              <form action="/api/date/delete/{{- $date.ID | getHex -}}" method="post">
+                <button type="submit">
+                  <i class='bx bx-x-circle'></i>
+                </button>
+              </form>
+            </div>
           </td>
           {{ end }}
           <td class="text-center">
@@ -62,7 +88,7 @@
           <td>{{ .LastName }}</td>
           <td>{{ .Age }}</td>
           <td class="token-list">
-              {{ template "tokenList" .Ethnicity }}
+            {{ template "tokenList" .Ethnicity }}
           </td>
           <td>{{ .Occupation }}</td>
           <td></td>

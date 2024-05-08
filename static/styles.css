@@ -469,14 +469,12 @@ body {
 }
 
 h1 {
-  margin-bottom: 1rem;
   font-size: 2.25rem;
   line-height: 2.5rem;
   font-weight: 700;
 }
 
 h2 {
-  margin-bottom: 1rem;
   font-size: 1.5rem;
   line-height: 2rem;
   font-weight: 700;
@@ -775,6 +773,45 @@ td {
   padding-bottom: 0px;
 }
 
+a.addDate {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 1rem;
+  border-width: 2px;
+  border-color: rgb(63 98 18 / var(--tw-border-opacity));
+  --tw-border-opacity: 0.4;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-bottom: 0.25rem;
+  text-align: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+@keyframes beacon {
+  0%, 100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+a.addDate:hover {
+  animation: beacon 1s linear infinite;
+  --tw-bg-opacity: 1;
+  background-color: rgb(163 230 53 / var(--tw-bg-opacity));
+}
+
+a.addDate {
+  line-height: 1rem;
+}
+
 /**
   * This injects Tailwind's utility classes and any utility classes registered
   * by plugins.
@@ -795,6 +832,11 @@ td {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .mb-1 {
@@ -954,6 +996,10 @@ td {
   justify-content: center;
 }
 
+.justify-between {
+  justify-content: space-between;
+}
+
 .gap-x-6 {
   -moz-column-gap: 1.5rem;
        column-gap: 1.5rem;
@@ -1095,6 +1141,10 @@ td {
   vertical-align: middle;
 }
 
+.align-text-top {
+  vertical-align: text-top;
+}
+
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -1188,6 +1238,20 @@ td {
   * If omitted, Tailwind will append these classes to the very end of
   * your stylesheet by default.
   */
+
+@keyframes beat {
+  0%, 100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.01);
+  }
+}
+
+.hover\:animate-beat-once:hover {
+  animation: beat 0.2s linear 1;
+}
 
 .hover\:bg-green-600:hover {
   --tw-bg-opacity: 1;
