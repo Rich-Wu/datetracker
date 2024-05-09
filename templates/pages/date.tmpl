@@ -2,8 +2,8 @@
 
 <body>
     <h2 class="text-center">Date Form</h2>
-    <form action="/api/date/{{- if .id -}}{{ .id }}{{- else -}}new{{- end -}}"
-        method="post" class="mx-auto max-w-md" autocomplete="off">
+    <form action="/api/date/{{- if .id -}}{{ .id }}{{- else -}}new{{- end -}}" method="post" class="mx-auto max-w-md"
+        autocomplete="off">
         <div class="vertical">
             <label for="first_name" class="block">First Name:</label>
             <input type="text" id="first_name" name="first_name" autocomplete="off" {{- if .date.FirstName
@@ -26,7 +26,8 @@
                 {{- template "tokenEditor" .date.Ethnicity -}}
                 {{- end -}}
             </div>
-            <input type="hidden" name="ethnicity" id="ethnicities" {{ if .date.Ethnicity }}value="{{ .date.Ethnicity | toSingleString }}"{{ end }}>
+            <input type="hidden" name="ethnicity" id="ethnicities" {{ if .date.Ethnicity
+                }}value="{{ .date.Ethnicity | toSingleString }}" {{ end }}>
         </div>
 
         <div class="vertical">
@@ -35,7 +36,7 @@
                 -}}value="{{- .date.Occupation -}}" {{- end -}} required>
         </div>
         <div id="places">
-            <button>Add another venue</button>
+            <button onclick="addVenue(event)">Add another venue</button>
             {{ template "placeForm" .date.Places }}
         </div>
 
@@ -69,5 +70,36 @@
         <input type="submit" value="Submit"
             class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded w-full font-bold text-white cursor-pointer">
     </form>
+
+    <script>
+        function addVenue(event) {
+            console.log('here')
+            const datesField = document.querySelector("#places");
+            datesField.innerHTML +=
+            `<fieldset>
+            <div class="vertical">
+                <label for="place" class="block">Location:</label>
+                <input type="text" name="place" id="place" required>
+            </div>
+            <div class="vertical">
+                <label for="type_of_place" class="block">Type of Date:</label>
+                <select name="type_of_place" id="type_of_place" required>
+                    <option value="">Select Type</option>
+                    <option value="Restaurant">Restaurant</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Dessert">Dessert</option>
+                    <option value="Casual">Casual</option>
+                    <option value="Formal">Formal</option>
+                    <option value="Adventure">Adventure</option>
+                </select>
+            </div>
+            <div class="vertical">
+                <label for="cost" class="block">Cost:</label>
+                <input type="text" name="cost" id="cost" required>
+            </div>
+            </fieldset>`
+            event.preventDefault();
+        }
+    </script>
 
     {{ template "footerHTML" }}
