@@ -111,7 +111,7 @@ func main() {
 	caser = cases.Title(language.AmericanEnglish)
 
 	router = gin.Default()
-	sessionsStore := mongodriver.NewStore(sessionsCollection, 3600, true, []byte(secret))
+	sessionsStore := mongodriver.NewStore(sessionsCollection, SESSION_TTL, true, []byte(secret))
 	router.Use(sessions.Sessions("session", sessionsStore))
 	router.SetFuncMap(template.FuncMap{
 		"dateString":     dateString,
@@ -123,10 +123,6 @@ func main() {
 	})
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/**/*.tmpl")
-
-	// router.GET("/test", func(c *gin.Context) {
-
-	// })
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
@@ -140,6 +136,17 @@ func main() {
 	})
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+	})
+	router.GET("/visualize", func(c *gin.Context) {
+		session := sessions.Default(c)
+		username := session.Get("username")
+		if username == nil {
+			renderError(c, http.StatusForbidden)
+			return
+		}
+		c.HTML(http.StatusOK, "visualize.tmpl", gin.H{
+			"username": username.(string),
+		})
 	})
 	router.GET("/logout", func(c *gin.Context) {
 		session := sessions.Default(c)
@@ -473,13 +480,22 @@ func main() {
 			c.Redirect(303, "/dates")
 		})
 		api.GET("/dates", func(c *gin.Context) {
+			session := sessions.Default(c)
+			user := session.Get("user")
+			if user == nil {
+				returnError(c, http.StatusForbidden)
+				return
+			}
+			userString := user.(string)
+			userKey, err := primitive.ObjectIDFromHex(userString)
+			if err != nil {
+				fmt.Println("Error occurred when converting user to primary key user:", err)
+			}
 			findOptions := options.Find()
 			// Sort by the date of occurrence, descending and then recency of insertion for tiebreaking
 			findOptions.SetSort(bson.D{{Key: "date", Value: -1}, {Key: "createdAt", Value: -1}})
-			// TODO: allow changing limit in query params
-			findOptions.SetLimit(50)
 
-			cursor, err := datesCollection.Find(context.Background(), bson.D{}, findOptions)
+			cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "ownerId", Value: userKey}}, findOptions)
 			if err != nil {
 				log.Println("Error finding documents:", err)
 				renderError(c, http.StatusConflict)

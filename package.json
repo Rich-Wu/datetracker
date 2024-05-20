@@ -1,0 +1,21 @@
+{
+  "name": "datetracker",
+  "version": "1.0.0",
+  "description": "webapp to track dates for users",
+  "main": "./static/scripts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "Rich-Wu",
+  "license": "ISC",
+  "dependencies": {
+    "chart.js": "^4.4.3",
+    "chartjs-plugin-datalabels": "^2.2.0"
+  },
+  "devDependencies": {
+    "source-map-loader": "^5.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.5"
+  }
+}

@@ -27,5 +27,6 @@
 /images/*.jpg
 /images/*.jpeg
 /images/*.png
+/node_modules
 /src
 */*.csv

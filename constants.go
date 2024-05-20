@@ -11,6 +11,7 @@ const (
 	IMAGES_PATH    = "./images"
 	PROD           = "PROD"
 	SESSIONS_STORE = "sessions"
+	SESSION_TTL    = 3600
 	USERS_TABLE    = "users"
 )
 

@@ -24,6 +24,7 @@ go.work
 /images/*.jpeg
 /images/*.png
 /static/*.js
+/node_modules
 */*.csv
 */*.json
 .DS_Store

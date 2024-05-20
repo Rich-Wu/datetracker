@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart test</title>
+    <script type="module" src="/static/scripts.js"></script>
+</head>
+
+<body>
+    <div>
+        <canvas id="datesChart"></canvas>
+    </div>
+    <div>
+        <canvas id="costChart"></canvas>
+    </div>
+    <div>
+        <canvas id="costPerDateChart"></canvas>
+    </div>
+    <div>
+        <canvas id="splitChart"></canvas>
+    </div>
+
+    <script type="module">
+        const { renderChart, getDates, aggDatesByMonth, getPrevMonths, aggCostByMonth, avgCostPerDateByMonth } = window._dt;
+        const dates = await getDates();
+        const datesChartElement = document.querySelector("#datesChart");
+        const prevMonths = getPrevMonths(6);
+        const monthLabels = prevMonths.map(month => month[0]);
+        const monthlyDateData = aggDatesByMonth(dates, prevMonths);
+        const dateCfg = {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    label: "{{ .username }}",
+                    data: monthlyDateData,
+                }],
+                labels: monthLabels,
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Dates By Month',
+                        align: 'center'
+                    }
+                }
+            }
+        };
+        const datesChartItem = await renderChart(datesChartElement, dateCfg);
+        const costChartElement = document.querySelector("#costChart");
+        const monthlyCostData = aggCostByMonth(dates, prevMonths);
+        const costCfg = {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    label: "{{ .username }}",
+                    data: monthlyCostData,
+                    fill: true,
+                }],
+                labels: monthLabels,
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Cost By Month',
+                        align: 'center'
+                    }
+                }
+            }
+        };
+        const costChartItem = await renderChart(costChartElement, costCfg);
+        const cpdChartElement = document.querySelector("#costPerDateChart");
+        const cpdData = avgCostPerDateByMonth(dates, prevMonths);
+        const cpdCfg = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: "{{ .username }}",
+                    data: cpdData,
+                }],
+                labels: monthLabels,
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Avg Cost per Date',
+                        align: 'center'
+                    }
+                }
+            }
+        };
+        const cpdChart = await renderChart(cpdChartElement, cpdCfg);
+    </script>
+</body>
+
+</html>
