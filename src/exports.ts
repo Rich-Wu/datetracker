@@ -1,13 +1,15 @@
-import Chart, { ChartConfiguration, ChartItem } from "chart.js/auto";
+import ChartLib, { ChartConfiguration, ChartItem, Chart, BarController, PieController, CategoryScale, LinearScale, BarElement, LineController, PointElement, LineElement, ArcElement, Colors, Title, Tooltip } from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-Chart.register(ChartDataLabels);
+Chart.register(ChartDataLabels, BarController, PieController, CategoryScale, LinearScale, BarElement, LineController, PointElement, LineElement, ArcElement, Colors, Title, Tooltip);
 Chart.defaults.set('plugins.datalabels', {
   anchor: 'end',
   align: 'top'
 })
 
 const tooltipDollar = (tooltipItem: any) => {
+  const item = tooltipItem.raw;
+  if (item === "0") return item;
   return "$" + tooltipItem.raw;
 }
 
@@ -125,8 +127,16 @@ const avgCostPerDateByMonth = (
 };
 
 const formatDollar = (value: number) => {
+  if (value === 0) return value;
   return "$" + value.toFixed(2);
-}
+};
+
+const getSplitData = (dates: DateData[]): number[] => {
+  let numberSplit = dates.filter(date => date.split).length;
+  let numberNoSplit = dates.filter(date => !date.split).length;
+  // Label this [Split, NoSplit]
+  return [numberSplit, numberNoSplit];
+};
 
 window._dt = {
   renderChart,
@@ -136,5 +146,6 @@ window._dt = {
   aggCostByMonth,
   avgCostPerDateByMonth,
   formatDollar,
-  tooltipDollar
+  tooltipDollar,
+  getSplitData,
 };

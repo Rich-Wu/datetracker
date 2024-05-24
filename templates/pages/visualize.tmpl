@@ -18,16 +18,15 @@
     <div>
         <canvas id="costPerDateChart"></canvas>
     </div>
-    <div>
-        <canvas id="splitChart"></canvas>
+    <div style="display:flex">
+        <div style="margin:auto;max-width: 500px">
+            <canvas id="splitChart"></canvas>
+        </div>
     </div>
 
     <script type="module">
-        const { renderChart, getDates, aggDatesByMonth, getPrevMonths, aggCostByMonth, avgCostPerDateByMonth, formatDollar, tooltipDollar } = window._dt;
+        const { renderChart, getDates, aggDatesByMonth, getPrevMonths, aggCostByMonth, avgCostPerDateByMonth, formatDollar, tooltipDollar, getSplitData } = window._dt;
         const dates = await getDates();
-        const comparison = await getDates('jeremy');
-        console.log(dates);
-        console.log(comparison);
         const datesChartElement = document.querySelector("#datesChart");
         const prevMonths = getPrevMonths();
         const monthLabels = prevMonths.map(month => month[0]);
@@ -38,9 +37,6 @@
                 datasets: [{
                     label: "{{ .username }}",
                     data: monthlyDateData,
-                },{
-                    label: "jeremy",
-                    data: aggDatesByMonth(comparison, prevMonths),
                 }],
                 labels: monthLabels,
             },
@@ -64,9 +60,6 @@
                 datasets: [{
                     label: "{{ .username }}",
                     data: monthlyCostData
-                },{
-                    label: "jeremy",
-                    data: aggCostByMonth(comparison, prevMonths),
                 }],
                 labels: monthLabels,
             },
@@ -98,9 +91,6 @@
                 datasets: [{
                     label: "{{ .username }}",
                     data: cpdData,
-                },{
-                    label: "jeremy",
-                    data: avgCostPerDateByMonth(comparison, prevMonths),
                 }],
                 labels: monthLabels,
             },
@@ -125,6 +115,32 @@
             }
         };
         const cpdChart = await renderChart(cpdChartElement, cpdCfg);
+        const splitChartElement = document.querySelector("#splitChart");
+        const splitLabels = ["Yes", "No"];
+        const splitData = getSplitData(dates);
+        const splitCfg = {
+            type: 'pie',
+            data: {
+                labels: splitLabels,
+                datasets: [{
+                    data: splitData,
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '# of Dates with Split Cost',
+                        align: 'center'
+                    },
+                    datalabels: {
+                        display: false,
+                    }
+                }
+            }
+        };
+        renderChart(splitChartElement, splitCfg);
     </script>
 </body>
 

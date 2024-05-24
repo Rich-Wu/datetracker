@@ -10,6 +10,7 @@ interface DateData {
     ownerId: string;
     places: Place[];
     result: string;
+    split: boolean;
 }
 
 interface Place {
