@@ -55,8 +55,8 @@ String.prototype.capitalize = function (): string {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
-const getDates = async (): Promise<Object[]> => {
-  const dates = await fetch(`/api/dates/`);
+const getDates = async (user: string = ''): Promise<Object[]> => {
+  const dates = await fetch(`/api/dates/${user}`);
   const jsonDates = await dates.json();
   return jsonDates;
 };

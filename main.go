@@ -516,6 +516,47 @@ func main() {
 
 			c.JSON(http.StatusOK, foundDates)
 		})
+		api.GET("/dates/:username", func(c *gin.Context) {
+			session := sessions.Default(c)
+			user := session.Get("user")
+			if user == nil {
+				returnError(c, http.StatusForbidden)
+				return
+			}
+			username, found := c.Params.Get("username")
+			if !found {
+				returnError(c, http.StatusBadRequest)
+				return
+			}
+			userResult := usersCollection.FindOne(context.Background(), bson.D{{Key: "username", Value: username}}, options.FindOne())
+			foundUser := &User{}
+			userResult.Decode(&foundUser)
+			userId := foundUser.ID
+			findOptions := options.Find()
+			// Sort by the date of occurrence, descending and then recency of insertion for tiebreaking
+			findOptions.SetSort(bson.D{{Key: "date", Value: -1}, {Key: "createdAt", Value: -1}})
+
+			cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "ownerId", Value: userId}}, findOptions)
+			if err != nil {
+				log.Println("Error finding documents:", err)
+				renderError(c, http.StatusConflict)
+				return
+			}
+			defer cursor.Close(context.Background())
+
+			foundDates := []Date{}
+			for cursor.Next(context.Background()) {
+				var result Date
+				if err := cursor.Decode(&result); err != nil {
+					fmt.Println("Error decoding document:", err)
+					renderError(c, http.StatusInternalServerError)
+					return
+				}
+				foundDates = append(foundDates, result)
+			}
+
+			c.JSON(http.StatusOK, foundDates)
+		})
 		api.GET("/user/:id", func(c *gin.Context) {
 			userId, err := primitive.ObjectIDFromHex(c.Param("id"))
 			if err != nil {

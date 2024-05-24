@@ -25,8 +25,11 @@
     <script type="module">
         const { renderChart, getDates, aggDatesByMonth, getPrevMonths, aggCostByMonth, avgCostPerDateByMonth, formatDollar, tooltipDollar } = window._dt;
         const dates = await getDates();
+        const comparison = await getDates('jeremy');
+        console.log(dates);
+        console.log(comparison);
         const datesChartElement = document.querySelector("#datesChart");
-        const prevMonths = getPrevMonths(6);
+        const prevMonths = getPrevMonths();
         const monthLabels = prevMonths.map(month => month[0]);
         const monthlyDateData = aggDatesByMonth(dates, prevMonths);
         const dateCfg = {
@@ -35,6 +38,9 @@
                 datasets: [{
                     label: "{{ .username }}",
                     data: monthlyDateData,
+                },{
+                    label: "jeremy",
+                    data: aggDatesByMonth(comparison, prevMonths),
                 }],
                 labels: monthLabels,
             },
@@ -57,8 +63,10 @@
             data: {
                 datasets: [{
                     label: "{{ .username }}",
-                    data: monthlyCostData,
-                    fill: true,
+                    data: monthlyCostData
+                },{
+                    label: "jeremy",
+                    data: aggCostByMonth(comparison, prevMonths),
                 }],
                 labels: monthLabels,
             },
@@ -90,10 +98,14 @@
                 datasets: [{
                     label: "{{ .username }}",
                     data: cpdData,
+                },{
+                    label: "jeremy",
+                    data: avgCostPerDateByMonth(comparison, prevMonths),
                 }],
                 labels: monthLabels,
             },
             options: {
+                tension: 0.2,
                 responsive: true,
                 plugins: {
                     title: {
