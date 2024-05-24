@@ -23,7 +23,7 @@
     </div>
 
     <script type="module">
-        const { renderChart, getDates, aggDatesByMonth, getPrevMonths, aggCostByMonth, avgCostPerDateByMonth } = window._dt;
+        const { renderChart, getDates, aggDatesByMonth, getPrevMonths, aggCostByMonth, avgCostPerDateByMonth, formatDollar, tooltipDollar } = window._dt;
         const dates = await getDates();
         const datesChartElement = document.querySelector("#datesChart");
         const prevMonths = getPrevMonths(6);
@@ -69,6 +69,14 @@
                         display: true,
                         text: 'Cost By Month',
                         align: 'center'
+                    },
+                    datalabels: {
+                        formatter: formatDollar
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: tooltipDollar
+                        }
                     }
                 }
             }
@@ -92,6 +100,14 @@
                         display: true,
                         text: 'Avg Cost per Date',
                         align: 'center'
+                    },
+                    datalabels: {
+                        formatter: formatDollar
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: tooltipDollar
+                        }
                     }
                 }
             }

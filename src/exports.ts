@@ -2,6 +2,14 @@ import Chart, { ChartConfiguration, ChartItem } from "chart.js/auto";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 Chart.register(ChartDataLabels);
+Chart.defaults.set('plugins.datalabels', {
+  anchor: 'end',
+  align: 'top'
+})
+
+const tooltipDollar = (tooltipItem: any) => {
+  return "$" + tooltipItem.raw;
+}
 
 const MONTHS: Month[] = [
   "January",
@@ -116,6 +124,10 @@ const avgCostPerDateByMonth = (
   return buckets;
 };
 
+const formatDollar = (value: number) => {
+  return "$" + value.toFixed(2);
+}
+
 window._dt = {
   renderChart,
   getDates,
@@ -123,4 +135,6 @@ window._dt = {
   aggDatesByMonth,
   aggCostByMonth,
   avgCostPerDateByMonth,
+  formatDollar,
+  tooltipDollar
 };
