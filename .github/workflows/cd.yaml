@@ -21,6 +21,7 @@ jobs:
       name: Google AppEngine deploy
       uses: 'google-github-actions/deploy-appengine@v2'
       with:
+        project_id: null
         env_vars: |-
           SECRET=${{ secrets.SECRET }}
           DB_URI=${{ secrets.DB_URI }}
