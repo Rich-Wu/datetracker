@@ -138,6 +138,36 @@ const getSplitData = (dates: DateData[]): number[] => {
   return [numberSplit, numberNoSplit];
 };
 
+function addVenue(event: Event) {
+  const datesField:HTMLElement | null = document.querySelector("#places");
+  if (datesField) {
+    datesField.innerHTML +=
+    `<fieldset>
+    <div class="vertical">
+        <label for="place" class="block">Location:</label>
+        <input type="text" name="place" id="place" required>
+    </div>
+    <div class="vertical">
+        <label for="type_of_place" class="block">Type of Date:</label>
+        <select name="type_of_place" id="type_of_place" required>
+            <option value="">Select Type</option>
+            <option value="Restaurant">Restaurant</option>
+            <option value="Drinks">Drinks</option>
+            <option value="Dessert">Dessert</option>
+            <option value="Casual">Casual</option>
+            <option value="Formal">Formal</option>
+            <option value="Adventure">Adventure</option>
+        </select>
+    </div>
+    <div class="vertical">
+        <label for="cost" class="block">Cost:</label>
+        <input type="text" name="cost" id="cost" required>
+    </div>
+    </fieldset>`
+  }
+  event.preventDefault();
+}
+
 window._dt = {
   renderChart,
   getDates,
@@ -148,4 +178,5 @@ window._dt = {
   formatDollar,
   tooltipDollar,
   getSplitData,
+  addVenue,
 };

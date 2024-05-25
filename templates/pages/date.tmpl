@@ -37,7 +37,7 @@
                 -}}value="{{- .date.Occupation -}}" {{- end -}} required>
         </div>
         <div id="places">
-            <button onclick="addVenue(event)">Add another venue</button>
+            <button onclick="window._dt.addVenue(event)">Add another venue</button>
             {{ template "placeForm" .date.Places }}
         </div>
 
@@ -71,35 +71,5 @@
         <input type="submit" value="Submit"
             class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded w-full font-bold text-white cursor-pointer">
     </form>
-
-    <script>
-        function addVenue(event) {
-            const datesField = document.querySelector("#places");
-            datesField.innerHTML +=
-            `<fieldset>
-            <div class="vertical">
-                <label for="place" class="block">Location:</label>
-                <input type="text" name="place" id="place" required>
-            </div>
-            <div class="vertical">
-                <label for="type_of_place" class="block">Type of Date:</label>
-                <select name="type_of_place" id="type_of_place" required>
-                    <option value="">Select Type</option>
-                    <option value="Restaurant">Restaurant</option>
-                    <option value="Drinks">Drinks</option>
-                    <option value="Dessert">Dessert</option>
-                    <option value="Casual">Casual</option>
-                    <option value="Formal">Formal</option>
-                    <option value="Adventure">Adventure</option>
-                </select>
-            </div>
-            <div class="vertical">
-                <label for="cost" class="block">Cost:</label>
-                <input type="text" name="cost" id="cost" required>
-            </div>
-            </fieldset>`
-            event.preventDefault();
-        }
-    </script>
 
     {{ template "footerHTML" }}
