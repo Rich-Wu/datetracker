@@ -434,6 +434,7 @@ func main() {
 				firstName = caser.String(c.PostForm("first_name"))
 				lastName = caser.String(c.PostForm("last_name"))
 			} else {
+				fmt.Println("Name parsing failed")
 				renderError(c, http.StatusBadRequest)
 				return
 			}
@@ -664,7 +665,7 @@ func main() {
 				renderError(c, http.StatusForbidden)
 				return
 			}
-			if isValidName(c.PostForm("first_name")) && isValidName(c.PostForm("last_name")) {
+			if isValidName(c.PostForm("first_name")) {
 				firstName = caser.String(c.PostForm("first_name"))
 				lastName = caser.String(c.PostForm("last_name"))
 			} else {
