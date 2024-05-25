@@ -1,14 +1,9 @@
 {{ template "headHTML" }}
 
-<body class="p-4">
-  <div class="flex justify-center">
+<body>
+  {{ template "navigation" .path }}
+  <div class="flex justify-center mx-4">
     <h1 class="mx-auto my-2 font-bold text-2xl">{{ .username }}'s Dates</h1>
-    {{ if .user }}
-    <a href="/date/new" class="hover:animate-beat-once addDate" type="button">
-      <i class="align-text-top">New Date</i>
-      <i class='text-2xl bx bxs-book-add'></i>
-    </a>
-    {{ end }}
   </div>
   <div class="overflow-x-auto">
     <table class="border-collapse border-gray-300 border w-full table-auto">

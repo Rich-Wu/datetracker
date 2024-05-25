@@ -1,6 +1,7 @@
 {{ template "headHTML" }}
 
 <body>
+    {{ template "navigation" .path }}
     <h2 class="text-center">Date Form</h2>
     <form action="/api/date/{{- if .id -}}{{ .id }}{{- else -}}new{{- end -}}" method="post" class="mx-auto max-w-md"
         autocomplete="off">

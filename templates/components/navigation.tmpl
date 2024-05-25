@@ -1,0 +1,46 @@
+{{ define "navigation" }}
+<nav class="bg-white shadow">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <div class="flex items-center md:hidden mr-2 -ml-2">
+                    <button type="button"
+                        class="inline-flex relative justify-center items-center hover:bg-gray-100 p-2 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+                        aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="absolute -inset-0.5"></span>
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                        <svg class="hidden w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex flex-shrink-0 items-center">
+                    <img class="w-auto h-8" src="/static/lbb.png" alt="LittleBlackBook logo">
+                </div>
+                <div class="md:flex md:space-x-8 hidden md:ml-6">
+                    <a href="/dates" class="inline-flex items-center {{ if eq . "/dates" }}active{{ else }}inactive{{
+                        end }}">Dates</a>
+                    <a href="/visualize" class="inline-flex items-center {{ if eq . "/visualize" }}active{{ else
+                        }}inactive{{ end }}">Visualize</a>
+                    <a href="/logout" class="inline-flex items-center inactive">Logout</a>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <a href="/date/new" class="hover:animate-beat-once addDate" type="button">
+                        <span>New Date</span>
+                        <span class='text-2xl align-middle bx bxs-book-add'></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+{{ end }}

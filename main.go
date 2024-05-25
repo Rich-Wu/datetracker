@@ -146,6 +146,7 @@ func main() {
 		}
 		c.HTML(http.StatusOK, "visualize.tmpl", gin.H{
 			"username": username.(string),
+			"path":     c.Request.URL.EscapedPath(),
 		})
 	})
 	router.GET("/logout", func(c *gin.Context) {
@@ -206,6 +207,7 @@ func main() {
 			"username": username,
 			"user":     user,
 			"dates":    dates,
+			"path":     c.Request.URL.EscapedPath(),
 		})
 	})
 	router.GET("/dates/:username", func(c *gin.Context) {

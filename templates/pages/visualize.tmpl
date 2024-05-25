@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualize</title>
-    <script type="module" src="/static/scripts.js"></script>
-</head>
+{{ template "headHTML" }}
 
 <body>
-    <div>
-        <canvas id="datesChart"></canvas>
-    </div>
-    <div>
-        <canvas id="costChart"></canvas>
-    </div>
-    <div>
-        <canvas id="costPerDateChart"></canvas>
-    </div>
-    <div style="display:flex">
-        <div style="margin:auto;max-width: 500px">
-            <canvas id="splitChart"></canvas>
+    {{ template "navigation" .path }}
+    <div class="p-4">
+        <div>
+            <canvas id="datesChart"></canvas>
+        </div>
+        <div>
+            <canvas id="costChart"></canvas>
+        </div>
+        <div>
+            <canvas id="costPerDateChart"></canvas>
+        </div>
+        <div style="display:flex">
+            <div style="margin:auto;max-width: 500px">
+                <canvas id="splitChart"></canvas>
+            </div>
         </div>
     </div>
 
