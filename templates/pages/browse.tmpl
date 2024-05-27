@@ -1,0 +1,26 @@
+{{ template "headHTML" }}
+{{ template "navigation" .path }}
+
+<div class="m-auto container">
+    <div class="gap-2 grid grid-cols-1 md:grid-cols-3 m-4">
+        {{ range .users }}
+        <a href="/dates/{{- .UserName -}}" class="userCard">
+            <div class="border-2 border-gray-300 grid grid-cols-2fr-3fr rounded-3xl h-32 overflow-hidden">
+                <div class="h-full overflow-hidden">
+                    <img class="w-full h-full object-cover" src="/images/default.png" alt="hello">
+                </div>
+                <div class="flex flex-col justify-between items-center">
+                    <dl class="flex flex-col m-auto">
+                        <dt>{{- .UserName -}}</dt>
+                        <dd>{{- .FirstName -}}</dd>
+                    </dl>
+                    <div class="py-2 border-t-2 w-full text-center transition-colors hover-light">
+                        <div>Browse</div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {{ end }}
+    </div>
+</div>
+{{ template "footerHTML" }}

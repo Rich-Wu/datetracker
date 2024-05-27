@@ -27,7 +27,7 @@
 
 @layer base {
   body {
-    @apply tracking-tight dark:bg-slate-900 dark:text-slate-200;
+    @apply tracking-tight dark:bg-slate-900 dark:text-slate-200 text-gray-800;
     font-family: "Courier New", Courier, monospace;
   }
   h1 {
@@ -61,6 +61,12 @@
   td {
     @apply px-4 py-2 border;
   }
+  dl {
+    @apply text-center;
+  }
+  dd {
+    @apply text-xs text-gray-500;
+  }
 }
 
 @layer components {
@@ -88,5 +94,8 @@
   }
   a.active {
     @apply border-indigo-500 px-1 pt-1 border-b-2 font-medium text-gray-900 text-sm pointer-events-none
+  }
+  div.hovered {
+    @apply bg-indigo-500 text-gray-200;
   }
 }

@@ -122,6 +122,7 @@ func main() {
 		"toSingleString": toSingleString,
 	})
 	router.Static("/static", "./static")
+	router.Static("/images", "./images")
 	router.LoadHTMLGlob("templates/**/*.tmpl")
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -147,6 +148,35 @@ func main() {
 		c.HTML(http.StatusOK, "visualize.tmpl", gin.H{
 			"username": username.(string),
 			"path":     c.Request.URL.EscapedPath(),
+		})
+	})
+	router.GET("/browse", func(c *gin.Context) {
+		session := sessions.Default(c)
+		if session.Get("user") == nil {
+			renderError(c, http.StatusForbidden)
+			return
+		}
+		users := []User{}
+		userCursor, err := usersCollection.Find(context.Background(), bson.D{}, options.Find())
+		if err != nil {
+			log.Println("Error finding documents:", err)
+			c.AbortWithError(http.StatusConflict, err)
+		}
+		defer userCursor.Close(context.Background())
+
+		for userCursor.Next(context.Background()) {
+			var result User
+			if err := userCursor.Decode(&result); err != nil {
+				fmt.Println("Error decoding document:", err)
+				renderError(c, http.StatusInternalServerError)
+				return
+			}
+			users = append(users, result)
+		}
+
+		c.HTML(200, "browse.tmpl", gin.H{
+			"path":  c.Request.URL.EscapedPath(),
+			"users": users,
 		})
 	})
 	router.GET("/logout", func(c *gin.Context) {
@@ -189,7 +219,7 @@ func main() {
 
 		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "ownerId", Value: userId}}, findOptions)
 		if err != nil {
-			log.Println("Error finding focuments:", err)
+			log.Println("Error finding documents:", err)
 			c.AbortWithError(http.StatusConflict, err)
 		}
 		defer cursor.Close(context.Background())
@@ -228,7 +258,7 @@ func main() {
 
 		cursor, err := datesCollection.Find(context.Background(), bson.D{{Key: "ownerId", Value: foundUser.ID}}, findOptions)
 		if err != nil {
-			log.Println("Error finding focuments:", err)
+			log.Println("Error finding documents:", err)
 			c.AbortWithError(http.StatusConflict, err)
 		}
 		defer cursor.Close(context.Background())

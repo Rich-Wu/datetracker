@@ -452,6 +452,8 @@ video {
 
 body {
   letter-spacing: -0.025em;
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
 @media (prefers-color-scheme: dark) {
@@ -569,6 +571,17 @@ td {
   padding-right: 1rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+dl {
+  text-align: center;
+}
+
+dd {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
 *, ::before, ::after {
@@ -882,22 +895,17 @@ a.active {
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
+div.hovered {
+  --tw-bg-opacity: 1;
+  background-color: rgb(99 102 241 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
+}
+
 /**
   * This injects Tailwind's utility classes and any utility classes registered
   * by plugins.
   */
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
 
 .\!visible {
   visibility: visible !important;
@@ -919,20 +927,20 @@ a.active {
   position: relative;
 }
 
-.-inset-0 {
-  inset: -0px;
-}
-
-.-inset-0\.5 {
-  inset: -0.125rem;
-}
-
 .left-1\/2 {
   left: 50%;
 }
 
 .top-0 {
   top: 0px;
+}
+
+.m-4 {
+  margin: 1rem;
+}
+
+.m-auto {
+  margin: auto;
 }
 
 .mx-4 {
@@ -950,10 +958,6 @@ a.active {
   margin-bottom: 0.5rem;
 }
 
-.-ml-2 {
-  margin-left: -0.5rem;
-}
-
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -968,10 +972,6 @@ a.active {
 
 .ml-10 {
   margin-left: 2.5rem;
-}
-
-.mr-2 {
-  margin-right: 0.5rem;
 }
 
 .mr-4 {
@@ -1026,8 +1026,8 @@ a.active {
   height: 4rem;
 }
 
-.h-6 {
-  height: 1.5rem;
+.h-32 {
+  height: 8rem;
 }
 
 .h-8 {
@@ -1052,10 +1052,6 @@ a.active {
 
 .w-1\/2 {
   width: 50%;
-}
-
-.w-6 {
-  width: 1.5rem;
 }
 
 .w-auto {
@@ -1119,6 +1115,14 @@ a.active {
   list-style-type: disc;
 }
 
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-2fr-3fr {
+  grid-template-columns: 2fr 3fr;
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -1139,9 +1143,17 @@ a.active {
   justify-content: space-between;
 }
 
+.gap-2 {
+  gap: 0.5rem;
+}
+
 .gap-x-6 {
   -moz-column-gap: 1.5rem;
        column-gap: 1.5rem;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .overflow-x-auto {
@@ -1150,6 +1162,10 @@ a.active {
 
 .rounded {
   border-radius: 0.25rem;
+}
+
+.rounded-3xl {
+  border-radius: 1.5rem;
 }
 
 .rounded-lg {
@@ -1162,6 +1178,10 @@ a.active {
 
 .border {
   border-width: 1px;
+}
+
+.border-2 {
+  border-width: 2px;
 }
 
 .border-t-2 {
@@ -1198,8 +1218,19 @@ a.active {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
-.p-2 {
-  padding: 0.5rem;
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.object-scale-down {
+  -o-object-fit: scale-down;
+     object-fit: scale-down;
 }
 
 .p-4 {
@@ -1331,11 +1362,6 @@ a.active {
   color: rgb(209 213 219 / var(--tw-text-opacity));
 }
 
-.text-gray-400 {
-  --tw-text-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-text-opacity));
-}
-
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -1374,6 +1400,12 @@ a.active {
   transition-duration: 150ms;
 }
 
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
 /**
   * Use this directive to control where Tailwind injects the hover, focus,
   * responsive, dark mode, and other variants of each class.
@@ -1396,11 +1428,6 @@ a.active {
   animation: beat 0.2s linear 1;
 }
 
-.hover\:bg-gray-100:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
-}
-
 .hover\:bg-green-600:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(22 163 74 / var(--tw-bg-opacity));
@@ -1409,31 +1436,6 @@ a.active {
 .hover\:bg-indigo-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(99 102 241 / var(--tw-bg-opacity));
-}
-
-.hover\:text-gray-500:hover {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity));
-}
-
-.focus\:outline-none:focus {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-}
-
-.focus\:ring-2:focus {
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-}
-
-.focus\:ring-inset:focus {
-  --tw-ring-inset: inset;
-}
-
-.focus\:ring-indigo-500:focus {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(99 102 241 / var(--tw-ring-opacity));
 }
 
 .focus-visible\:outline:focus-visible {
@@ -1478,8 +1480,8 @@ a.active {
     display: flex;
   }
 
-  .md\:hidden {
-    display: none;
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .md\:space-x-8 > :not([hidden]) ~ :not([hidden]) {

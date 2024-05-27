@@ -1,4 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const browseButtons = document.querySelectorAll(".userCard");
+  if (browseButtons) {
+    browseButtons.forEach((button) => {
+      const browse = button.querySelector(".hover-light");
+      button.addEventListener("mouseenter", (event) => {
+        browse?.classList.add("hovered");
+      });
+      button.addEventListener("mouseleave", (event) => {
+        browse?.classList.remove("hovered");
+      });
+    });
+  }
+
   const tokenInput: HTMLInputElement | null = document.getElementById(
     "ethnicity-input"
   ) as HTMLInputElement;
