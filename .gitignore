@@ -20,8 +20,8 @@
 # Go workspace file
 go.work
 
-/images/*.jpg
-/images/*.jpeg
+/images/*-pfp.jpg
+/images/*-pfp.jpeg
 /images/*-pfp.png
 /static/*.js
 /node_modules

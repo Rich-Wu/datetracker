@@ -86,8 +86,9 @@
     @apply flex flex-wrap px-0 py-0 max-w-full;
   }
   a.addDate {
-    @apply font-mono border-2 border-opacity-40 border-lime-800 rounded-2xl px-4 py-2 text-center hover:bg-lime-400 hover:animate-beacon transition-colors;
+    @apply font-mono bg-indigo-500 border-indigo-500 rounded-full px-4 py-2 text-center hover:bg-indigo-700 hover:border-indigo-700 transition-all text-gray-200 hover:text-white;
     line-height: 1rem;
+    display: inline-block;
   }
   a.inactive {
     @apply hover:border-gray-300 px-1 pt-1 border-transparent border-b-2 font-medium text-gray-500 text-sm hover:text-gray-700
