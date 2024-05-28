@@ -138,6 +138,11 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 	})
+	router.GET("/account", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "account.tmpl", gin.H{
+			"path": c.Request.URL.EscapedPath(),
+		})
+	})
 	router.GET("/visualize", func(c *gin.Context) {
 		session := sessions.Default(c)
 		username := session.Get("username")
