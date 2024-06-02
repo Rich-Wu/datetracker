@@ -488,16 +488,15 @@ func main() {
 				runningTotal += float32(cost)
 			}
 
-			length = len(c.PostForm("ethnicity"))
-			ethnicities := c.PostForm("ethnicity")[:length-1]
-			ethnicitiesList := strings.Split(ethnicities, ",")
+			fmt.Println(c.PostFormArray("ethnicity"))
+			ethnicities := c.PostFormArray("ethnicity")
 			split, _ := strconv.ParseBool(c.PostForm("split"))
 
 			updatedDate := &Date{
 				OwnerId:    userId,
 				FirstName:  firstName,
 				LastName:   lastName,
-				Ethnicity:  ethnicitiesList,
+				Ethnicity:  ethnicities,
 				Occupation: caser.String(c.PostForm("occupation")),
 				Places:     places,
 				Split:      split,
@@ -722,16 +721,14 @@ func main() {
 				runningTotal += float32(cost)
 			}
 
-			length = len(c.PostForm("ethnicity"))
-			ethnicities := c.PostForm("ethnicity")[:length-1]
-			ethnicitiesList := strings.Split(ethnicities, ",")
+			ethnicities := c.PostFormArray("ethnicity")
 			split, _ := strconv.ParseBool(c.PostForm("split"))
 
 			newDate := &Date{
 				OwnerId:    objId,
 				FirstName:  firstName,
 				LastName:   lastName,
-				Ethnicity:  ethnicitiesList,
+				Ethnicity:  ethnicities,
 				Occupation: caser.String(c.PostForm("occupation")),
 				Places:     places,
 				Split:      split,

@@ -2,7 +2,8 @@
 {{ range . }}
 <div class="token">
     <div class="token-label">{{ . }}</div>
-    <div class="token-close"><i class="align-middle bx bx-x-circle"></i></div>
+    <input type="hidden" name="ethnicity" value="{{ . }}" />
+    <div class="token-close" onclick="this.parentElement.remove()"><i class="align-middle bx bx-x-circle"></i></div>
 </div>
 {{ end }}
 {{ end }}

@@ -17,7 +17,7 @@
                 {{- end -}}>
         </div>
 
-        <div class="token-input-container vertical">
+        <div class="token-input-container vertical" id="ethnicities">
             <label for="ethnicity-input" class="block">Ethnicity:</label>
             <div>
                 <input type="text" class="token-input" id="ethnicity-input" placeholder="Type and press Enter">
@@ -27,8 +27,6 @@
                 {{- template "tokenEditor" .date.Ethnicity -}}
                 {{- end -}}
             </div>
-            <input type="hidden" name="ethnicity" id="ethnicities" {{ if .date.Ethnicity
-                }}value="{{ .date.Ethnicity | toSingleString }}" {{ end }}>
         </div>
 
         <div class="vertical">

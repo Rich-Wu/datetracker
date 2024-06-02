@@ -15,18 +15,21 @@ document.addEventListener("DOMContentLoaded", function () {
   const tokenInput: HTMLInputElement | null = document.getElementById(
     "ethnicity-input"
   ) as HTMLInputElement;
-  const tokenList: HTMLElement = document.getElementById(
+  const tokenList: HTMLElement & TokenList = document.getElementById(
     "ethnicity-list"
-  ) as HTMLElement;
+  ) as HTMLElement & TokenList;
   const tokenField: HTMLInputElement | null = document.getElementById(
     "ethnicities"
   ) as HTMLInputElement;
 
-  function addToken(): void {
-    const tokenValue = tokenInput?.value.trim().capitalize();
-    if (tokenField) {
-      tokenField.value += tokenValue + ",";
+  if (tokenList) {
+    tokenList.removeToken = function(token: HTMLElement) {
+      this.removeChild(token);
     }
+  }
+
+  function addToken(tokenValue: string): void {
+    tokenValue = tokenValue.trim().capitalize();
     if (tokenValue) {
       const token = document.createElement("div");
       token.classList.add("token");
@@ -38,12 +41,17 @@ document.addEventListener("DOMContentLoaded", function () {
       closeToken.innerHTML = `<i class='bx bx-x-circle align-middle'></i>`;
       token.appendChild(closeToken);
       closeToken.classList.add("token-close");
+      const input = document.createElement("input");
+      input.setAttribute("name", "ethnicity");
+      input.setAttribute("type", "hidden");
+      input.setAttribute("value", tokenValue);
+      token.appendChild(input);
       tokenList.appendChild(token);
       if (tokenInput) {
         tokenInput.value = "";
       }
       closeToken.addEventListener("click", function () {
-        tokenList.removeChild(token);
+        tokenList.removeToken(token);
       });
     }
   }
@@ -51,12 +59,12 @@ document.addEventListener("DOMContentLoaded", function () {
   if (tokenInput) {
     tokenInput.addEventListener("blur", function (event) {
       event.preventDefault();
-      addToken();
+      addToken(tokenInput.value);
     });
     tokenInput.addEventListener("keydown", function (event) {
       if (event.key === "Enter") {
         event.preventDefault();
-        addToken();
+        addToken(tokenInput.value);
       }
     });
   }
