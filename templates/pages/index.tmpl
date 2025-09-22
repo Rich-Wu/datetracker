@@ -8,11 +8,20 @@
         <p class="mb-2">This page is still in development. Sign up below for our newsletter and to be kept updated with
             development news:</p>
     </header>
-    <form class="flex mb-8" id="signup-form" action="/email" method="POST">
-        <input class="horizontal" type="text" name="name" id="name" placeholder="Name" autocomplete="given-name"
-            required>
-        <input class="horizontal" type="email" name="email" id="email" placeholder="Email Address" autocomplete="email"
-            required>
+    <form class="flex flex-col mb-4" id="signup-form" action="/email" method="POST">
+        <div class="flex mb-2">
+            <input class="horizontal" type="text" name="name" id="name" placeholder="Name" autocomplete="given-name"
+                required>
+            <input class="horizontal" type="email" name="email" id="email" placeholder="Email Address"
+                autocomplete="email" required>
+            <input class="horizontal" type="tel" name="phonenumber" id="phonenumber"
+                placeholder="Telephone Number (optional)" autocomplete="tel" pattern="\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}">
+        </div>
+        <label class="mb-2 text-sm text-center" for="sms">
+            <input class="w-auto" type="checkbox" name="sms" id="sms" value="true">
+            By checking this box, you agree to receive SMS notifications from littleblackbook.io for
+            updates on the development of the platform. Messaging and data rates may apply.
+        </label>
         <input type="submit" value="Newsletter Sign Up">
     </form>
     <footer class="border-t-2">
